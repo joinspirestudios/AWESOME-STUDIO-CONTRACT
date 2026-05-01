@@ -2270,6 +2270,31 @@ const state = {
 };
 
 /* ============================================================
+   PRINT MODE DETECTION
+   When the server-side PDF renderer (Puppeteer) loads this page,
+   it appends ?print=1&state=<base64-json>. We use this to:
+     1. Skip localStorage restore (we want server-supplied state only)
+     2. Inject the state directly
+     3. Freeze form inputs into static spans so values render in PDF
+     4. Set body.print-ready so the renderer knows we're done
+   ============================================================ */
+
+function getPrintParams() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('print') !== '1') return null;
+    const stateParam = params.get('state');
+    if (!stateParam) return { state: null };
+    // Decode base64 → JSON
+    const json = atob(stateParam);
+    return { state: JSON.parse(json) };
+  } catch (e) {
+    console.warn('Failed to parse print params:', e);
+    return null;
+  }
+}
+
+/* ============================================================
    TIER & COUNTRY CONFIGURATION
    ============================================================ */
 
@@ -2749,19 +2774,15 @@ function bindEvents() {
    inputs for static spans (so values render in the printed PDF).
    ============================================================ */
 
-function downloadFilledPDF() {
+function freezeInputsForPrint() {
   // Build readable map of selected values (for selects + payment + portfolio)
   const tier = state.tier ? TIER_CONFIG[state.tier] : null;
   const countryLabel = state.country ? (COUNTRY_LABELS[state.country] || state.country) : '';
   const tierLabel = tier ? `${tier.title} — ${fmtUSD(tier.priceUSD)}` : '';
   const startLabel = state.startDate ? fmtDate(state.startDate) : '';
   const endLabel = (tier && state.startDate) ? calcEndDate(state.startDate, tier.durationWeeks) : '';
-  const paymentLabel = ({ A: 'Option A — 75 / 25', B: 'Option B — 50 / 50', C: 'Custom split as agreed in writing' }[state.payment]) || '';
-  const portfolioLabel = state.portfolioDelay === 'yes'
-    ? 'Yes — delay portfolio publishing for up to 6 months after delivery'
-    : (state.portfolioDelay === 'no' ? 'No — portfolio rights activate on delivery' : '');
 
-  // Snapshot of fields to freeze: { selector, value, blockEl (optional) }
+  // Snapshot of fields to freeze: { sel/el, value, isSelect (optional) }
   const freezeMap = [
     { sel: '#clientName', value: state.clientName },
     { sel: '#clientAddress', value: state.clientAddress },
@@ -2803,12 +2824,10 @@ function downloadFilledPDF() {
     restorers.push(() => { el.style.display = ''; span.remove(); });
   });
 
-  // Add a "filled" class to the body so print stylesheet can show personalization spots
+  // Mark body so print stylesheet has additional context
   document.body.classList.add('printing-filled');
 
-  // Render selected payment / portfolio rows visually for print (hide unselected)
-  const printHideSelectors = [];
-  // Hide unselected tier rows in Section 2.1 — keep only the selected one
+  // Hide unselected tier / payment / portfolio rows so only the chosen ones print
   document.querySelectorAll('.tier-row[data-tier]').forEach(row => {
     if (row.dataset.tier !== state.tier && state.tier) row.classList.add('print-hide');
   });
@@ -2819,20 +2838,111 @@ function downloadFilledPDF() {
     if (row.dataset.portfolio !== state.portfolioDelay && state.portfolioDelay) row.classList.add('print-hide');
   });
 
-  // Trigger print
+  // Hide the entire Sign block — it's not part of the printable contract
+  // (the wax seal lives inside .sign-section, but the @media print rules already
+  // hide .sign-cta-block, .sign-status, .sign-fineprint. We also explicitly hide
+  // the sign-summary card so the PDF doesn't show the live preview UI.)
+  const signSummary = document.getElementById('signSummary');
+  if (signSummary) {
+    signSummary.classList.add('print-hide');
+    restorers.push(() => signSummary.classList.remove('print-hide'));
+  }
+
+  // Return restore fn so callers (browser print path) can undo this
+  return () => {
+    restorers.forEach(fn => fn());
+    document.body.classList.remove('printing-filled');
+    document.querySelectorAll('.print-hide').forEach(el => el.classList.remove('print-hide'));
+  };
+}
+
+/* ============================================================
+   DOWNLOAD PDF — dynamic server-rendered version (preferred)
+   POSTs current state to /api/generate-pdf, gets a PDF buffer
+   back, triggers a browser download. The PDF is byte-identical
+   to what gets sent to Dropbox Sign for signing.
+   ============================================================ */
+
+async function downloadFilledPDF() {
+  const btn = document.getElementById('downloadBtn');
+  const origText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.textContent = 'Generating PDF…';
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.7';
+  }
+
+  // Hint after 5 seconds — same UX pattern as the Sign button
+  let hintTimer = setTimeout(() => {
+    if (btn) btn.textContent = 'Generating PDF… (this may take a few seconds)';
+  }, 5000);
+
+  try {
+    const res = await fetch('/api/generate-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formData: { ...state } })
+    });
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.message || errBody.error || `Server returned ${res.status}`);
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+
+    // Filename — mirror what the server suggested via Content-Disposition,
+    // but build a sane fallback in case the header isn't accessible.
+    const cd = res.headers.get('Content-Disposition') || '';
+    const m = cd.match(/filename="?([^";]+)"?/);
+    const clientSlug = (state.clientName || 'Client').replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '_').substring(0, 60);
+    const filename = m ? m[1] : `AWESOME_x_${clientSlug}_Brand_Design_Agreement.pdf`;
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch (err) {
+    console.error('Download via server failed, falling back to browser print:', err);
+    // Fallback: browser-side window.print() with frozen inputs.
+    // This still produces a personalized PDF but takes a different rendering path,
+    // so it may differ slightly in styling from the Dropbox Sign version.
+    downloadFilledPDFViaPrint();
+  } finally {
+    clearTimeout(hintTimer);
+    if (btn) {
+      btn.textContent = origText;
+      btn.style.pointerEvents = '';
+      btn.style.opacity = '';
+    }
+  }
+}
+
+/* ============================================================
+   DOWNLOAD PDF — browser-print fallback (legacy v3 behavior)
+   Used only if /api/generate-pdf fails. Produces a PDF that's
+   roughly equivalent but rendered through the browser's print
+   pipeline rather than headless Chromium.
+   ============================================================ */
+
+function downloadFilledPDFViaPrint() {
+  const restore = freezeInputsForPrint();
+
   setTimeout(() => {
     window.print();
 
     // Restore after the print dialog closes
-    const restore = () => {
-      restorers.forEach(fn => fn());
-      document.body.classList.remove('printing-filled');
-      document.querySelectorAll('.print-hide').forEach(el => el.classList.remove('print-hide'));
-      window.removeEventListener('afterprint', restore);
+    const cleanup = () => {
+      restore();
+      window.removeEventListener('afterprint', cleanup);
     };
-    window.addEventListener('afterprint', restore);
+    window.addEventListener('afterprint', cleanup);
     // Fallback in case afterprint doesn't fire (some browsers)
-    setTimeout(restore, 2000);
+    setTimeout(cleanup, 2000);
   }, 50);
 }
 
@@ -2898,6 +3008,19 @@ const setStatus = (msg, type = '') => {
 async function handleSign() {
   setStatus('Preparing your contract for signature…', 'loading');
 
+  // After 5s, surface that things are slow. Cleared once we get a response.
+  // The first cold start (Chromium download + boot) can take 10-15s.
+  const slowHintTimer = setTimeout(() => {
+    setStatus(
+      'Preparing your contract for signature… ' +
+      '(this may take a few seconds — generating a personalized PDF)',
+      'loading'
+    );
+  }, 5000);
+
+  // Helper to clear the timer no matter how this fn exits
+  const clearHint = () => clearTimeout(slowHintTimer);
+
   // First, save the submitted state to our backend (for tracking)
   try {
     await fetch('/api/submit', {
@@ -2944,6 +3067,9 @@ async function handleSign() {
       body: JSON.stringify(payload)
     });
 
+    // Response received — clear the "still working" hint timer
+    clearHint();
+
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.message || `Server returned ${res.status}`);
@@ -2951,6 +3077,7 @@ async function handleSign() {
 
     data = await res.json();
   } catch (err) {
+    clearHint();
     console.error('Sign request error:', err);
     setStatus(
       'Could not create signature request. ' +
@@ -3022,9 +3149,64 @@ async function handleSign() {
    INIT
    ============================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadLogo();
-  loadWaxSeal();
+document.addEventListener('DOMContentLoaded', async () => {
+  // Always load visual assets — fonts, logo, wax seal — for both modes
+  await Promise.all([loadLogo(), loadWaxSeal()]);
+
+  const printParams = getPrintParams();
+
+  if (printParams) {
+    // === PRINT MODE — server-side PDF render ===
+    // The headless renderer (Puppeteer in /lib/render-contract-pdf.js) loaded
+    // this page with ?print=1&state=<base64>. Apply the injected state, run
+    // the reactive update, freeze inputs into static spans, then signal
+    // readiness so the renderer knows it's safe to call page.pdf().
+
+    // Bind event handlers anyway in case anything internal triggers them
+    bindEvents();
+
+    // Override state with what the server sent (skip localStorage entirely
+    // so a stale local state can't bleed into someone else's PDF)
+    if (printParams.state) {
+      Object.assign(state, printParams.state);
+
+      // Reflect into form fields so update()'s lookups see them
+      // (mirrors the body of restore() — kept in sync intentionally)
+      if (state.country) $('#setupCountry').value = state.country;
+      if (state.tier) $('#setupTier').value = state.tier;
+      if (state.startDate) $('#setupStartDate').value = state.startDate;
+      if (state.clientName) $('#clientName').value = state.clientName;
+      if (state.clientAddress) $('#clientAddress').value = state.clientAddress;
+      if (state.clientEmail) $('#clientEmail').value = state.clientEmail;
+      if (state.clientPhone) $('#clientPhone').value = state.clientPhone;
+      if (state.projectBrief) {
+        $$('textarea[data-sync="projectBrief"]').forEach(ta => { ta.value = state.projectBrief; });
+      }
+      if (state.projectName) $('#projectName').value = state.projectName;
+      if (state.industry) $('#industry').value = state.industry;
+      if (state.customVariations) $('#customVariations').value = state.customVariations;
+      if (state.specialTerms) $('#specialTerms').value = state.specialTerms;
+      if (state.customSplitDetails) {
+        const cs = document.getElementById('customSplitDetails');
+        if (cs) cs.value = state.customSplitDetails;
+      }
+    }
+
+    // Run reactive update — populates all data-bind targets, country/tier
+    // visibility, phase durations, Schedule A highlights, etc.
+    update();
+
+    // Freeze inputs into static spans so values render in the PDF
+    freezeInputsForPrint();
+
+    // Tiny extra delay to let the freeze DOM operations settle, then signal
+    // ready. Puppeteer's waitForSelector('body.print-ready') unblocks here.
+    await new Promise(r => setTimeout(r, 100));
+    document.body.classList.add('print-ready');
+    return;
+  }
+
+  // === NORMAL MODE — interactive client-facing page ===
   bindEvents();
   restore();
   update();

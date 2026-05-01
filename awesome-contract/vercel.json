@@ -30,9 +30,17 @@
   ],
   "functions": {
     "api/sign.js": {
-      "maxDuration": 30,
-      "includeFiles": "pdf/**"
+      "maxDuration": 60,
+      "memory": 1024,
+      "includeFiles": "{lib/**,pdf/**}"
     },
-    "api/submit.js": { "maxDuration": 10 }
+    "api/generate-pdf.js": {
+      "maxDuration": 60,
+      "memory": 1024,
+      "includeFiles": "lib/**"
+    },
+    "api/submit.js": {
+      "maxDuration": 10
+    }
   }
 }

@@ -1,10 +1,14 @@
 {
   "name": "awesome-contract",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "THE AWESOME DESIGN STUDIO LTD — Brand Design Agreement (interactive web contract)",
+  "description": "THE AWESOME DESIGN STUDIO LTD — Brand Design Agreement (interactive web contract with dynamic PDF rendering)",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@sparticuz/chromium-min": "^140.0.0",
+    "puppeteer-core": "^24.0.0"
   },
   "scripts": {
     "dev": "vercel dev",

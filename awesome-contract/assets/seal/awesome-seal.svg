@@ -1,0 +1,94 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AWESOME wax seal">
+  <defs>
+    <radialGradient id="waxBody" cx="0.32" cy="0.28" r="0.85">
+      <stop offset="0%" stop-color="#f4dba0"/>
+      <stop offset="20%" stop-color="#e3bc73"/>
+      <stop offset="55%" stop-color="#b88a3e"/>
+      <stop offset="85%" stop-color="#7a5520"/>
+      <stop offset="100%" stop-color="#3d2a0d"/>
+    </radialGradient>
+
+    <radialGradient id="innerLight" cx="0.35" cy="0.3" r="0.5">
+      <stop offset="0%" stop-color="rgba(255,235,180,0.6)"/>
+      <stop offset="100%" stop-color="rgba(255,235,180,0)"/>
+    </radialGradient>
+
+    <radialGradient id="centerWell" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="rgba(60,38,10,0)"/>
+      <stop offset="60%" stop-color="rgba(60,38,10,0.15)"/>
+      <stop offset="100%" stop-color="rgba(40,20,5,0.4)"/>
+    </radialGradient>
+
+    <filter id="dropshadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="3" result="offsetblur"/>
+      <feFlood flood-color="rgba(0,0,0,0.5)"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="emboss">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.6" result="blur"/>
+      <feSpecularLighting in="blur" surfaceScale="2" specularConstant="0.8"
+        specularExponent="20" lighting-color="#ffe4a8" result="spec">
+        <feDistantLight azimuth="225" elevation="55"/>
+      </feSpecularLighting>
+      <feComposite in="spec" in2="SourceAlpha" operator="in" result="lit"/>
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="lit"/>
+      </feMerge>
+    </filter>
+
+    <filter id="textInset">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.4" result="blur"/>
+      <feOffset in="blur" dx="0.5" dy="0.5" result="offsetBlur"/>
+      <feFlood flood-color="#2a1b08" flood-opacity="0.7"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Wavy wax body with cooled drip edges -->
+  <path filter="url(#dropshadow)" fill="url(#waxBody)"
+    d="M 100,12
+       C 118,10 132,18 146,26
+       C 160,34 172,46 178,62
+       C 184,78 188,94 188,108
+       C 188,124 184,140 174,154
+       C 164,168 152,178 138,184
+       C 124,190 110,192 96,190
+       C 80,188 64,182 50,172
+       C 36,162 24,148 18,132
+       C 12,116 10,98 14,82
+       C 18,66 26,52 38,38
+       C 50,24 66,16 82,12
+       C 88,11 94,12 100,12 Z"/>
+
+  <!-- Inner highlight gloss -->
+  <ellipse cx="76" cy="62" rx="44" ry="30" fill="url(#innerLight)"/>
+
+  <!-- Inner darker well (center recess) -->
+  <circle cx="100" cy="100" r="62" fill="url(#centerWell)"/>
+
+  <!-- Inner ring (carved into wax) -->
+  <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(50,28,8,0.3)" stroke-width="1"/>
+  <circle cx="100" cy="100" r="58" fill="none" stroke="rgba(255,220,150,0.25)" stroke-width="0.5"/>
+
+  <!-- Embossed awę. mark -->
+  <text x="100" y="115" font-family="EB Garamond, Georgia, serif" font-size="48"
+        font-weight="600" text-anchor="middle" fill="#3d2710"
+        filter="url(#textInset)">aw<tspan font-style="italic">ę</tspan>.</text>
+
+  <!-- Tiny stars/dots to break up monotony -->
+  <circle cx="100" cy="32" r="1.5" fill="rgba(255,220,150,0.5)"/>
+  <circle cx="168" cy="100" r="1.5" fill="rgba(255,220,150,0.4)"/>
+  <circle cx="100" cy="168" r="1.5" fill="rgba(255,220,150,0.5)"/>
+  <circle cx="32" cy="100" r="1.5" fill="rgba(255,220,150,0.4)"/>
+</svg>

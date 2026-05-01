@@ -1,0 +1,2780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Awesome Brand Design Agreement</title>
+<meta name="description" content="THE AWESOME DESIGN STUDIO LTD — Brand Design Agreement">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<!-- Hellosign / Dropbox Sign Embedded SDK -->
+<script src="https://cdn.hellosign.com/public/js/embedded/v2.10.1/embedded.production.min.js"></script>
+
+<style>
+/* ==========================================================
+   AWESOME BRAND DESIGN AGREEMENT — Web Version
+   Built to Be Awesome · 2026 ©
+   ========================================================== */
+
+/* === BRAND FONTS ===
+   These reference font files in /assets/fonts/.
+   Drop your PP Editorial New + ZT Nature Sans .woff2 files there.
+   Until then, the system gracefully falls back to EB Garamond + Inter.
+*/
+
+@font-face {
+  font-family: 'PP Editorial New';
+  src: url('./assets/fonts/PPEditorialNew-Ultralight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Editorial New';
+  src: url('./assets/fonts/PPEditorialNew-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Editorial New';
+  src: url('./assets/fonts/PPEditorialNew-UltralightItalic.woff2') format('woff2');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ZT Nature';
+  src: url('./assets/fonts/ZTNature-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ZT Nature';
+  src: url('./assets/fonts/ZTNature-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ZT Nature';
+  src: url('./assets/fonts/ZTNature-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ZT Nature';
+  src: url('./assets/fonts/ZTNature-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Google Font fallbacks (loaded if local fonts unavailable) */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Brand palette */
+  --stop: #C70100;
+  --maroon: #280000;
+  --canvas: #E5D9C5;
+  --texture: #EDE7DD;
+  --canvas-soft: #F2EBDF;
+  --canvas-dark: #D8C9B0;
+
+  /* Typography stack — uses brand fonts when available, falls back to Google Fonts */
+  --serif: 'PP Editorial New', 'EB Garamond', Georgia, serif;
+  --sans: 'ZT Nature', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --shell-max: 1400px;
+  --content-max: 780px;
+  --sidebar-w: 300px;
+  --topbar-h: 68px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--topbar-h) + 16px);
+}
+
+body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--maroon);
+  background: var(--texture);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================
+   TOP BAR
+   ========================================================== */
+
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--topbar-h);
+  background: rgba(237, 231, 221, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(40, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.topbar-inner {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  justify-content: space-between;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.topbar-mark {
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-mark img,
+.topbar-mark svg {
+  height: 100%;
+  width: auto;
+}
+
+.topbar-divider {
+  height: 22px;
+  width: 1px;
+  background: rgba(40, 0, 0, 0.18);
+}
+
+.topbar-title {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(40, 0, 0, 0.6);
+  font-weight: 500;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-cta {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: var(--stop);
+  color: var(--texture);
+  padding: 11px 22px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.topbar-cta:hover {
+  background: #a30100;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(199, 1, 0, 0.25);
+}
+
+.topbar-progress {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--stop);
+  transition: width 0.1s ease;
+}
+
+/* ==========================================================
+   LAYOUT SHELL — centered max-width, sidebar + main
+   ========================================================== */
+
+.shell {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding-top: var(--topbar-h);
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+/* ==========================================================
+   SIDEBAR
+   ========================================================== */
+
+.sidebar {
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+  padding: 32px 16px 48px 32px;
+  border-right: 1px solid rgba(40, 0, 0, 0.08);
+}
+
+.sidebar-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--stop);
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding-left: 12px;
+}
+
+.sidebar-nav { list-style: none; }
+.sidebar-nav li { margin-bottom: 1px; }
+
+.sidebar-nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--maroon);
+  text-decoration: none;
+  line-height: 1.4;
+  border-left: 2px solid transparent;
+  margin-left: -2px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar-nav a:hover {
+  background: rgba(199, 1, 0, 0.06);
+  color: var(--stop);
+}
+
+.sidebar-nav a.active {
+  background: rgba(199, 1, 0, 0.08);
+  border-left-color: var(--stop);
+  color: var(--stop);
+  font-weight: 500;
+}
+
+.sidebar-nav .num {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-size: 14px;
+  color: var(--stop);
+  flex-shrink: 0;
+  width: 22px;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: rgba(40, 0, 0, 0.1);
+  margin: 14px 4px;
+}
+
+/* ==========================================================
+   MAIN COLUMN
+   ========================================================== */
+
+.main {
+  min-width: 0;
+  padding: 0 64px;
+}
+
+.content {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* ==========================================================
+   HERO (cover) — dark maroon contained block
+   ========================================================== */
+
+.hero {
+  background: var(--maroon);
+  border-radius: 6px;
+  padding: 88px 72px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 32px;
+  color: var(--texture);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -15%;
+  width: 70%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(199, 1, 0, 0.16) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-content { position: relative; }
+
+.hero-eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--stop);
+  font-weight: 500;
+  margin-bottom: 36px;
+}
+
+.hero-mark {
+  height: 110px;
+  margin-bottom: 48px;
+}
+
+.hero-mark img,
+.hero-mark svg {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.12;
+  color: var(--texture);
+  margin-bottom: 0;
+  letter-spacing: -0.005em;
+}
+
+.hero-title .light {
+  font-weight: 200;
+  color: var(--stop);
+}
+
+.hero-meta {
+  border-top: 1px solid rgba(237, 231, 221, 0.15);
+  margin-top: 64px;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(237, 231, 221, 0.55);
+  text-transform: uppercase;
+}
+
+.hero-meta-right {
+  color: var(--stop);
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================
+   PROMISE — neutral canvas treatment (no red bg)
+   ========================================================== */
+
+.promise {
+  padding: 96px 0;
+  border-bottom: 1px solid rgba(40, 0, 0, 0.08);
+  scroll-margin-top: var(--topbar-h);
+}
+
+.promise-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stop);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.promise-headline {
+  font-family: var(--serif);
+  font-size: 56px;
+  line-height: 1.05;
+  margin-bottom: 40px;
+  font-weight: 400;
+  color: var(--maroon);
+  letter-spacing: -0.01em;
+}
+
+.promise-headline .light {
+  font-weight: 200;
+}
+
+.promise-rule {
+  width: 60px;
+  height: 2px;
+  background: var(--stop);
+  margin-bottom: 36px;
+}
+
+.promise-body {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.55;
+  margin-bottom: 18px;
+  color: var(--maroon);
+}
+
+.promise-signature {
+  margin-top: 52px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(40, 0, 0, 0.15);
+}
+
+.promise-signature-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 200;
+  color: var(--maroon);
+}
+
+.promise-signature-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(40, 0, 0, 0.55);
+  margin-top: 6px;
+}
+
+/* ==========================================================
+   SETUP CARD — country, tier, start date selectors at top
+   ========================================================== */
+
+.setup-card {
+  background: var(--canvas-soft);
+  border: 1px solid rgba(40, 0, 0, 0.1);
+  border-left: 4px solid var(--stop);
+  border-radius: 0 8px 8px 0;
+  padding: 32px 36px;
+  margin: 32px 0 64px 0;
+}
+
+.setup-card-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--stop);
+  margin-bottom: 8px;
+}
+
+.setup-card-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--maroon);
+  margin-bottom: 6px;
+}
+
+.setup-card-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: rgba(40, 0, 0, 0.7);
+  margin-bottom: 24px;
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.setup-field { display: flex; flex-direction: column; }
+
+.setup-field label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stop);
+  margin-bottom: 6px;
+}
+
+.setup-field input,
+.setup-field select {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--maroon);
+  background: var(--texture);
+  border: 1px solid rgba(40, 0, 0, 0.18);
+  border-radius: 4px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.setup-field input:focus,
+.setup-field select:focus {
+  border-color: var(--stop);
+  box-shadow: 0 0 0 3px rgba(199, 1, 0, 0.1);
+}
+
+/* ==========================================================
+   SECTIONS
+   ========================================================== */
+
+.section {
+  padding: 72px 0;
+  border-bottom: 1px solid rgba(40, 0, 0, 0.08);
+  scroll-margin-top: var(--topbar-h);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--stop);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 44px;
+  line-height: 1.1;
+  margin-bottom: 22px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--maroon);
+}
+
+.section-title .light {
+  font-weight: 200;
+  color: var(--stop);
+}
+
+.section-rule {
+  width: 56px;
+  height: 2px;
+  background: var(--stop);
+  margin-bottom: 40px;
+}
+
+.section h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--maroon);
+  margin: 36px 0 12px 0;
+  letter-spacing: -0.005em;
+}
+
+.section h3 {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stop);
+  margin: 26px 0 10px 0;
+}
+
+.section p {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  color: var(--maroon);
+}
+
+.section p strong { font-weight: 600; }
+
+.section ul, .section ol {
+  margin: 12px 0 20px 24px;
+}
+
+.section li {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--maroon);
+}
+
+.section ul li::marker, .section ol li::marker { color: var(--stop); }
+
+/* Inline link style */
+.section a {
+  color: var(--stop);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(199, 1, 0, 0.3);
+  transition: border-color 0.15s;
+}
+.section a:hover { border-bottom-color: var(--stop); }
+
+/* ==========================================================
+   PARTIES CARDS
+   ========================================================== */
+
+.parties-block {
+  background: var(--canvas-soft);
+  border-left: 3px solid var(--stop);
+  padding: 22px 28px;
+  margin: 18px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.parties-block-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--stop);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.parties-block-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--maroon);
+  margin-bottom: 6px;
+}
+
+.parties-block-detail {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--maroon);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* Editable input fields inside parties block */
+.field-input,
+.field-textarea {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--maroon);
+  background: var(--texture);
+  border: 1px solid rgba(40, 0, 0, 0.18);
+  border-radius: 4px;
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  margin-bottom: 6px;
+}
+
+.field-textarea {
+  min-height: 60px;
+  resize: vertical;
+  font-family: var(--sans);
+  line-height: 1.5;
+}
+
+.field-input:focus,
+.field-textarea:focus {
+  border-color: var(--stop);
+  box-shadow: 0 0 0 3px rgba(199, 1, 0, 0.1);
+}
+
+.field-input.large {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  padding: 8px 12px;
+}
+
+/* ==========================================================
+   TIER SELECTOR
+   ========================================================== */
+
+.tier-checkbox-block {
+  background: var(--canvas);
+  padding: 18px 24px;
+  border-radius: 6px;
+  margin: 20px 0;
+}
+
+.tier-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(40, 0, 0, 0.1);
+  cursor: pointer;
+  transition: padding-left 0.15s;
+}
+
+.tier-row:last-child { border-bottom: none; }
+
+.tier-row:hover {
+  padding-left: 4px;
+}
+
+.tier-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--maroon);
+  margin-right: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 2px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tier-row.selected .tier-checkbox {
+  background: var(--stop);
+  border-color: var(--stop);
+}
+
+.tier-row.selected .tier-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--texture);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tier-name {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--maroon);
+  flex: 1;
+}
+
+.tier-price {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--stop);
+}
+
+/* ==========================================================
+   TABLES
+   ========================================================== */
+
+.section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-family: var(--sans);
+}
+
+.section table th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texture);
+  background: var(--maroon);
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.section table td {
+  font-size: 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(40, 0, 0, 0.1);
+  color: var(--maroon);
+}
+
+.section table tr:nth-child(even) td {
+  background: rgba(229, 217, 197, 0.4);
+}
+
+.section table tr.hidden-row { display: none; }
+
+/* ==========================================================
+   CALLOUT
+   ========================================================== */
+
+.callout {
+  background: var(--canvas);
+  border-left: 3px solid var(--stop);
+  padding: 18px 22px;
+  margin: 18px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.callout-title {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stop);
+  margin-bottom: 10px;
+}
+
+.callout-body {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--maroon);
+}
+
+/* ==========================================================
+   LAYER BLOCKS (Silence Protocol)
+   ========================================================== */
+
+.layer-block {
+  background: var(--canvas-soft);
+  border: 1px solid rgba(40, 0, 0, 0.1);
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.layer-block:hover {
+  border-color: rgba(199, 1, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(40, 0, 0, 0.04);
+}
+
+.layer-tag {
+  display: inline-block;
+  background: var(--stop);
+  color: var(--texture);
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  margin-bottom: 12px;
+  border-radius: 3px;
+}
+
+.layer-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--maroon);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+
+/* ==========================================================
+   SCHEDULE A — TIER SCHEDULE CARDS
+   ========================================================== */
+
+.tier-schedule {
+  background: var(--canvas);
+  padding: 32px;
+  margin: 24px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(40, 0, 0, 0.08);
+  transition: opacity 0.3s, filter 0.3s;
+}
+
+.tier-schedule.dimmed {
+  opacity: 0.4;
+  filter: grayscale(60%);
+}
+
+.tier-schedule.active {
+  border: 2px solid var(--stop);
+  box-shadow: 0 8px 24px rgba(199, 1, 0, 0.08);
+  position: relative;
+}
+
+.tier-schedule.active::before {
+  content: "Selected Tier";
+  position: absolute;
+  top: -10px;
+  right: 24px;
+  background: var(--stop);
+  color: var(--texture);
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+
+.tier-schedule-name {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--maroon);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.tier-schedule-name .light {
+  font-weight: 200;
+  color: var(--stop);
+}
+
+.tier-schedule-price {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--stop);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.tier-schedule-tagline {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 200;
+  color: rgba(40, 0, 0, 0.78);
+  line-height: 1.5;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(40, 0, 0, 0.15);
+}
+
+.tier-schedule table { margin: 0; }
+.tier-schedule table th { display: none; }
+.tier-schedule table td {
+  background: transparent !important;
+  padding: 10px 0;
+  border-bottom: 1px dotted rgba(40, 0, 0, 0.2);
+}
+
+/* ==========================================================
+   SIGN BLOCK (CTA SECTION) — dark maroon
+   ========================================================== */
+
+.sign-section {
+  background: var(--maroon);
+  border-radius: 8px;
+  padding: 80px 64px;
+  color: var(--texture);
+  margin: 32px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.sign-section::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 50%;
+  height: 160%;
+  background: radial-gradient(circle, rgba(199, 1, 0, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.sign-content {
+  position: relative;
+  text-align: center;
+}
+
+.sign-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--stop);
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.sign-headline {
+  font-family: var(--serif);
+  font-size: 52px;
+  line-height: 1.05;
+  margin-bottom: 22px;
+  font-weight: 400;
+  color: var(--texture);
+  letter-spacing: -0.01em;
+}
+
+.sign-headline .light {
+  font-weight: 200;
+  color: var(--stop);
+}
+
+.sign-confirmation {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 1.6;
+  color: rgba(237, 231, 221, 0.9);
+  margin: 0 auto 40px;
+  max-width: 540px;
+}
+
+/* Form summary at sign block */
+.sign-summary {
+  background: rgba(237, 231, 221, 0.05);
+  border: 1px solid rgba(237, 231, 221, 0.18);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin: 32px auto;
+  text-align: left;
+  max-width: 480px;
+}
+
+.sign-summary-title {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--stop);
+  margin-bottom: 14px;
+}
+
+.sign-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(237, 231, 221, 0.12);
+  font-family: var(--sans);
+  font-size: 13px;
+}
+.sign-summary-row:last-child { border-bottom: none; }
+
+.sign-summary-label {
+  color: rgba(237, 231, 221, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+}
+
+.sign-summary-value {
+  color: var(--texture);
+  font-weight: 500;
+  text-align: right;
+  font-family: var(--serif);
+  font-size: 14px;
+}
+
+.sign-summary-value.empty {
+  color: rgba(237, 231, 221, 0.3);
+  font-style: normal;
+}
+
+.sign-cta-block {
+  margin: 36px 0 28px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sign-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--stop);
+  color: var(--texture);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 18px 36px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.sign-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(199, 1, 0, 0.4);
+  background: #d8221d;
+}
+
+.sign-cta:disabled,
+.sign-cta.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  background: var(--stop);
+}
+
+.sign-cta svg { width: 16px; height: 16px; }
+
+.sign-secondary {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: rgba(237, 231, 221, 0.7);
+  text-decoration: none;
+  padding: 18px 24px;
+  border: 1px solid rgba(237, 231, 221, 0.3);
+  border-radius: 4px;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.sign-secondary:hover {
+  border-color: var(--stop);
+  color: var(--texture);
+}
+
+.sign-status {
+  font-family: var(--sans);
+  font-size: 14px;
+  margin-top: 16px;
+  min-height: 22px;
+}
+.sign-status.success { color: #9be8a3; }
+.sign-status.error { color: #ff7a78; }
+.sign-status.loading { color: rgba(237, 231, 221, 0.7); }
+
+.sign-fineprint {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: rgba(237, 231, 221, 0.5);
+  margin-top: 28px;
+  letter-spacing: 0.04em;
+}
+
+/* Wax seal in sign block */
+.wax-seal-wrap {
+  text-align: center;
+  margin: 28px 0 16px 0;
+}
+
+.wax-seal-mark {
+  display: inline-block;
+  width: 92px;
+  height: 92px;
+}
+
+.sign-tagline {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 200;
+  color: rgba(237, 231, 221, 0.6);
+  margin-bottom: 24px;
+}
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+.footer {
+  background: var(--maroon);
+  padding: 24px 0;
+  color: rgba(237, 231, 221, 0.55);
+}
+
+.footer-inner {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: 0 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.footer-right { color: var(--stop); }
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--maroon);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0; right: 0; bottom: 0;
+  background: rgba(40, 0, 0, 0.5);
+  z-index: 98;
+}
+.backdrop.show { display: block; }
+
+@media (max-width: 1100px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: var(--topbar-h);
+    left: 0;
+    width: 280px;
+    background: var(--texture);
+    z-index: 99;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.08);
+    border-right: 1px solid rgba(40, 0, 0, 0.08);
+  }
+
+  .sidebar.open { transform: translateX(0); }
+
+  .main { padding: 0 32px; }
+
+  .mobile-toggle { display: block; }
+  .topbar-title { display: none; }
+
+  .hero-title { font-size: 36px; }
+  .promise-headline { font-size: 44px; }
+  .section-title { font-size: 36px; }
+  .sign-headline { font-size: 40px; }
+}
+
+@media (max-width: 700px) {
+  .topbar-inner { padding: 0 16px; }
+  .topbar-cta { padding: 9px 16px; font-size: 12px; }
+
+  .main { padding: 0 20px; }
+
+  .hero { padding: 56px 32px; border-radius: 4px; }
+  .hero-mark { height: 72px; margin-bottom: 32px; }
+  .hero-title { font-size: 28px; }
+
+  .promise { padding: 64px 0; }
+  .promise-headline { font-size: 36px; }
+  .promise-body { font-size: 18px; }
+
+  .setup-card { padding: 24px; }
+  .setup-grid { grid-template-columns: 1fr; }
+
+  .section { padding: 56px 0; }
+  .section-title { font-size: 30px; }
+
+  .sign-section { padding: 56px 28px; border-radius: 4px; }
+  .sign-headline { font-size: 32px; }
+
+  .sign-cta-block { flex-direction: column; }
+  .sign-secondary { width: 100%; text-align: center; }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .tier-schedule { padding: 24px; }
+  .tier-schedule-name { font-size: 28px; }
+}
+
+/* Hide elements while loading state initial */
+.country-only-local,
+.country-only-international,
+.tier-only-strategy {
+  /* Default visible — hidden via JS based on state */
+}
+
+/* Print preserves color */
+@media print {
+  body { background: #fff; }
+  .topbar, .sidebar, .sign-cta-block { display: none; }
+  .shell { grid-template-columns: 1fr; padding-top: 0; }
+  .main { padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TOP BAR
+     ============================================================ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M2 5h16v2H2zm0 4h16v2H2zm0 4h16v2H2z"/>
+        </svg>
+      </button>
+      <span class="topbar-mark" id="topbarMark"></span>
+      <span class="topbar-divider"></span>
+      <span class="topbar-title">Brand Design Agreement</span>
+    </div>
+    <div class="topbar-right">
+      <a href="#sign" class="topbar-cta">Sign Contract →</a>
+    </div>
+  </div>
+  <div class="topbar-progress" id="progress"></div>
+</header>
+
+<div class="backdrop" id="backdrop"></div>
+
+<!-- ============================================================
+     SHELL — sidebar + main column
+     ============================================================ -->
+<div class="shell">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-label">Navigation</div>
+    <ul class="sidebar-nav">
+      <li><a href="#hero"><span class="num">—</span> Cover</a></li>
+      <li><a href="#promise"><span class="num">—</span> The Promise</a></li>
+      <li><a href="#section-1"><span class="num">01</span> The Parties</a></li>
+      <li><a href="#section-2"><span class="num">02</span> The Work</a></li>
+      <li><a href="#section-3"><span class="num">03</span> Timeline</a></li>
+      <li><a href="#section-4"><span class="num">04</span> The Investment</a></li>
+      <li><a href="#section-5"><span class="num">05</span> Late Payment</a></li>
+      <li><a href="#section-6"><span class="num">06</span> Revisions</a></li>
+      <li><a href="#section-7"><span class="num">07</span> Client Responsibilities</a></li>
+      <li><a href="#section-8"><span class="num">08</span> The Silence Protocol</a></li>
+      <li><a href="#section-9"><span class="num">09</span> Ownership &amp; Rights</a></li>
+      <li><a href="#section-10"><span class="num">10</span> Termination &amp; Kill Fee</a></li>
+      <li><a href="#section-11"><span class="num">11</span> Communication</a></li>
+      <li><a href="#section-12"><span class="num">12</span> Confidentiality</a></li>
+      <li><a href="#section-13"><span class="num">13</span> Interpretation</a></li>
+      <li><a href="#section-14"><span class="num">14</span> Limitation of Liability</a></li>
+      <li><a href="#section-15"><span class="num">15</span> Governing Law</a></li>
+      <li><a href="#section-16"><span class="num">16</span> Force Majeure</a></li>
+      <li><a href="#section-17"><span class="num">17</span> General Provisions</a></li>
+      <li class="sidebar-divider"></li>
+      <li><a href="#schedule-a"><span class="num">A</span> Deliverables by Tier</a></li>
+      <li><a href="#schedule-b"><span class="num">B</span> Project Details</a></li>
+      <li class="sidebar-divider"></li>
+      <li><a href="#sign" style="color: var(--stop); font-weight: 600;"><span class="num">→</span> Sign Contract</a></li>
+    </ul>
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="main">
+    <div class="content">
+
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <div class="hero-content">
+          <div class="hero-eyebrow">Brand Design Agreement &nbsp;·&nbsp; 2026 ©</div>
+          <div class="hero-mark" id="heroMark"></div>
+          <h1 class="hero-title">
+            A partnership <span class="light">contract</span><br>
+            between two parties<br>
+            who refuse the ordinary.
+          </h1>
+          <div class="hero-meta">
+            <span>THE AWESOME DESIGN STUDIO LTD &nbsp;·&nbsp; LAGOS, NIGERIA</span>
+            <span class="hero-meta-right">awesomebydesign.studio</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROMISE (now neutral, no red) -->
+      <section class="promise" id="promise">
+        <div class="promise-eyebrow">A Note Before The Terms</div>
+        <h2 class="promise-headline">The <span class="light">Promise</span></h2>
+        <div class="promise-rule"></div>
+        <p class="promise-body">This is not a wall. It is a foundation.</p>
+        <p class="promise-body">Most contracts are written to scare people into compliance. This one is written to make the work better. The clearer we are at the start, the freer we both are to do the work that matters &mdash; building a brand that refuses to be ordinary.</p>
+        <p class="promise-body">Every clause in this document exists for one of three reasons: to protect the work, to protect the relationship, or to protect both parties when something unexpected happens. Read it carefully. Ask questions. When you sign it, you are not just agreeing to terms. You are agreeing to build something awesome, on purpose.</p>
+        <div class="promise-signature">
+          <div class="promise-signature-name">— Kehinde Awe</div>
+          <div class="promise-signature-title">Founder &amp; Creative Director</div>
+        </div>
+      </section>
+
+      <!-- SETUP CARD — country, tier, start date — drives all reactive content -->
+      <div class="setup-card" id="setupCard">
+        <div class="setup-card-eyebrow">Quick Setup</div>
+        <div class="setup-card-title">Tell us a few things first</div>
+        <div class="setup-card-desc">These three answers tailor the entire contract to your project. You can change them at any time.</div>
+        <div class="setup-grid">
+          <div class="setup-field">
+            <label for="setupCountry">Client Country</label>
+            <select id="setupCountry">
+              <option value="">Choose your country —</option>
+              <option value="NG">Nigeria</option>
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="CA">Canada</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="ES">Spain</option>
+              <option value="IT">Italy</option>
+              <option value="NL">Netherlands</option>
+              <option value="AU">Australia</option>
+              <option value="NZ">New Zealand</option>
+              <option value="ZA">South Africa</option>
+              <option value="KE">Kenya</option>
+              <option value="GH">Ghana</option>
+              <option value="EG">Egypt</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="SG">Singapore</option>
+              <option value="JP">Japan</option>
+              <option value="CN">China</option>
+              <option value="IN">India</option>
+              <option value="BR">Brazil</option>
+              <option value="MX">Mexico</option>
+              <option value="OTHER">Other (international)</option>
+            </select>
+          </div>
+          <div class="setup-field">
+            <label for="setupTier">Selected Tier</label>
+            <select id="setupTier">
+              <option value="">Choose a tier —</option>
+              <option value="start">AWESOME START — $1,000</option>
+              <option value="elevate">AWESOME ELEVATE — $1,500</option>
+              <option value="legacy">AWESOME LEGACY — $5,000</option>
+            </select>
+          </div>
+          <div class="setup-field">
+            <label for="setupStartDate">Project Start Date</label>
+            <input type="date" id="setupStartDate">
+          </div>
+          <div class="setup-field">
+            <label for="setupEndDate">Estimated Completion</label>
+            <input type="text" id="setupEndDate" readonly placeholder="Auto-calculated from start date" style="background: rgba(40,0,0,0.04); cursor: not-allowed;">
+          </div>
+        </div>
+      </div>
+
+      <!-- ============= SECTION 1 — Parties ============= -->
+      <section class="section" id="section-1">
+        <div class="section-eyebrow">Section 01</div>
+        <h2 class="section-title">The <span class="light">Parties</span></h2>
+        <div class="section-rule"></div>
+
+        <p>This agreement is between two parties, identified below.</p>
+
+        <div class="parties-block">
+          <div class="parties-block-label">The Design Studio</div>
+          <div class="parties-block-name">THE AWESOME DESIGN STUDIO LTD</div>
+          <div class="parties-block-detail">
+            Operating as &ldquo;AWESOME&rdquo;<br>
+            11, Tunde Agunbiade Street, Muniru Estate, Ogombo, Lagos, Nigeria<br>
+            hello@awesomebydesign.studio &nbsp;·&nbsp; +234 806 282 8409
+          </div>
+        </div>
+
+        <div class="parties-block">
+          <div class="parties-block-label">The Client</div>
+          <input type="text" class="field-input large" id="clientName" placeholder="Client legal business name" required>
+          <input type="text" class="field-input" id="clientAddress" placeholder="Client business address" required>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;">
+            <input type="email" class="field-input" id="clientEmail" placeholder="Client email" required>
+            <input type="tel" class="field-input" id="clientPhone" placeholder="Client phone">
+          </div>
+        </div>
+
+        <p>Throughout this agreement, the company above is referred to as <strong>&ldquo;the Design Studio&rdquo;</strong> and the company that has commissioned the work is referred to as <strong>&ldquo;the Client.&rdquo;</strong> Together, the two are referred to as <strong>&ldquo;the Parties.&rdquo;</strong></p>
+      </section>
+
+      <!-- ============= SECTION 2 — The Work ============= -->
+      <section class="section" id="section-2">
+        <div class="section-eyebrow">Section 02</div>
+        <h2 class="section-title">The <span class="light">Work</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>2.1 &nbsp; Selected Tier</h2>
+        <p>The Client has selected the following tier:</p>
+
+        <div class="tier-checkbox-block">
+          <div class="tier-row" data-tier="start">
+            <span class="tier-checkbox"></span>
+            <span class="tier-name">AWESOME START</span>
+            <span class="tier-price">$1,000 USD</span>
+          </div>
+          <div class="tier-row" data-tier="elevate">
+            <span class="tier-checkbox"></span>
+            <span class="tier-name">AWESOME ELEVATE</span>
+            <span class="tier-price">$1,500 USD</span>
+          </div>
+          <div class="tier-row" data-tier="legacy">
+            <span class="tier-checkbox"></span>
+            <span class="tier-name">AWESOME LEGACY</span>
+            <span class="tier-price">$5,000 USD</span>
+          </div>
+        </div>
+
+        <h2>2.2 &nbsp; Deliverables Included</h2>
+        <p>The deliverables for <span data-bind="tierName">the selected tier</span> are listed in <a href="#schedule-a">Schedule A</a> at the end of this agreement. Only the deliverables listed in Schedule A are included in this contract. Anything not listed is considered out of scope.</p>
+
+        <h2>2.3 &nbsp; Out of Scope</h2>
+        <p>If the Client requests work that is not listed in Schedule A, the Design Studio will provide a separate written quote for that work before starting it. The Design Studio reserves the sole right to decline any work not listed in the original scope, or to amend the project timeline to accommodate the additional work.</p>
+
+        <h2>2.4 &nbsp; Project Description</h2>
+        <div class="callout">
+          <div class="callout-title">A short description of this project</div>
+          <textarea class="field-textarea" id="projectDescription" placeholder="Describe the brand, the industry, and any specific brand context the Design Studio should know about..." rows="3"></textarea>
+        </div>
+      </section>
+
+      <!-- ============= SECTION 3 — Timeline ============= -->
+      <section class="section" id="section-3">
+        <div class="section-eyebrow">Section 03</div>
+        <h2 class="section-title"><span class="light">Timeline</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>3.1 &nbsp; Project Duration</h2>
+        <p>This project will run between <strong data-bind="startDate">[Start Date]</strong> and <strong data-bind="endDate">[Estimated Completion Date]</strong>. The estimated duration for <span data-bind="tierName">the selected tier</span> is <strong data-bind="tierDuration">3 to 12 weeks</strong>.</p>
+
+        <h2>3.2 &nbsp; Phase Structure</h2>
+        <p>The project will move through the following phases:</p>
+
+        <table id="phaseTable">
+          <thead>
+            <tr><th>#</th><th>Phase</th><th>Description</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-phase-num>1</td><td><strong>Discovery</strong></td><td>Onboarding, brand questionnaire, kickoff call</td><td>Week 1</td></tr>
+            <tr class="tier-only-strategy" data-strategy-row><td data-phase-num>2</td><td><strong>Strategy</strong></td><td>Positioning, audience, brand strategy document</td><td>Week 1&ndash;2</td></tr>
+            <tr><td data-phase-num>3</td><td><strong>Visual Direction</strong></td><td>Mood, references, creative territories presented</td><td>Week 2&ndash;3</td></tr>
+            <tr><td data-phase-num>4</td><td><strong>Design</strong></td><td>Logo, color, type, full visual system</td><td>Week 3&ndash;6</td></tr>
+            <tr><td data-phase-num>5</td><td><strong>Refinement</strong></td><td>Revisions, finalization, asset preparation</td><td>Week 6&ndash;8</td></tr>
+            <tr><td data-phase-num>6</td><td><strong>Delivery</strong></td><td>Handover of all final files and brand assets</td><td><span data-bind="deliveryWeek">Week 8&ndash;12</span></td></tr>
+          </tbody>
+        </table>
+
+        <h2>3.3 &nbsp; Timeline Dependence</h2>
+        <p>The timeline above assumes the Client provides feedback within the timeframe set in <a href="#section-7">Section 7</a>. If the Client delays feedback, the timeline shifts by the same number of days, and the Design Studio is no longer bound to the original Estimated Completion Date.</p>
+      </section>
+
+      <!-- ============= SECTION 4 — The Investment ============= -->
+      <section class="section" id="section-4">
+        <div class="section-eyebrow">Section 04</div>
+        <h2 class="section-title">The <span class="light">Investment</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>4.1 &nbsp; Total Investment</h2>
+        <p>The total cost for <span data-bind="tierName">the selected tier</span> is <strong data-bind="tierPrice">[$ AMOUNT]</strong>. <span class="country-only-local" style="display:none;">As a Nigerian client, this amount is invoiced in <strong>Nigerian Naira (NGN)</strong> at the prevailing official exchange rate on the date of invoice.</span><span class="country-only-international" style="display:none;">As an international client, this amount is invoiced in <strong>United States Dollars (USD)</strong>.</span></p>
+
+        <h2>4.2 &nbsp; Payment Schedule</h2>
+        <p>The Client may choose one of the following payment structures:</p>
+        <ul>
+          <li><strong>Option A:</strong> 75% upfront before work begins, 25% on final delivery.</li>
+          <li><strong>Option B:</strong> 50% non-refundable deposit before work begins, 50% on final delivery.</li>
+        </ul>
+        <p>For larger or longer projects, the Parties may agree in writing to a milestone-based split. Any such variation must be recorded in a written addendum signed by both Parties.</p>
+
+        <h2>4.3 &nbsp; Selected Payment Structure</h2>
+        <div class="tier-checkbox-block" id="paymentBlock">
+          <div class="tier-row" data-payment="A"><span class="tier-checkbox"></span><span class="tier-name">Option A &mdash; 75 / 25</span></div>
+          <div class="tier-row" data-payment="B"><span class="tier-checkbox"></span><span class="tier-name">Option B &mdash; 50 / 50</span></div>
+          <div class="tier-row" data-payment="C"><span class="tier-checkbox"></span><span class="tier-name">Custom split as agreed in writing</span></div>
+        </div>
+
+        <h2>4.4 &nbsp; Currency</h2>
+        <p class="country-only-local" style="display:none;">Pricing for this Nigerian engagement is invoiced in <strong>Nigerian Naira (NGN)</strong> at the prevailing official exchange rate on the date of invoice. All bank transfer fees are paid by the Client.</p>
+        <p class="country-only-international" style="display:none;">Pricing for this international engagement is set in <strong>United States Dollars (USD)</strong>. All wire fees, payment processor fees, and currency conversion costs are paid by the Client and are not deducted from the Design Studio's invoice amount.</p>
+        <p class="country-pending" id="currencyPending">Currency terms will be displayed once a Client country is selected above.</p>
+
+        <h2>4.5 &nbsp; Accepted Payment Methods</h2>
+        <div class="country-only-local" style="display:none;">
+          <p>For this Nigerian engagement, the accepted payment method is:</p>
+          <ul>
+            <li><strong>Direct Bank Transfer</strong> to THE AWESOME DESIGN STUDIO LTD's account <em>(details provided on invoice)</em></li>
+          </ul>
+        </div>
+        <div class="country-only-international" style="display:none;">
+          <p>For this international engagement, the accepted payment methods are:</p>
+          <ul>
+            <li><strong>Wise</strong></li>
+            <li><strong>Western Union</strong></li>
+          </ul>
+        </div>
+
+        <h2>4.6 &nbsp; Deposit Required Before Work Begins</h2>
+        <p>Work will not start until the agreed deposit (50% or 75%) has been received and confirmed in the Design Studio's account. If the deposit is not received within <strong>seven (7) days</strong> of contract signing, the Design Studio reserves the right to release the project slot to another client.</p>
+      </section>
+
+      <!-- ============= SECTION 5 — Late Payment ============= -->
+      <section class="section" id="section-5">
+        <div class="section-eyebrow">Section 05</div>
+        <h2 class="section-title">Late <span class="light">Payment</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>5.1 &nbsp; Grace Period</h2>
+        <p>Payments are due on the dates listed on each invoice. The Client has a <strong>fourteen (14) day</strong> grace period after the due date to make the payment with no penalty.</p>
+
+        <h2>5.2 &nbsp; Late Fee</h2>
+        <p>If payment is not received within the fourteen (14) day grace period, a late fee of <strong>two percent (2%) per month</strong> is added to the outstanding amount, calculated as simple interest. The total late fees applied cannot exceed the original invoice amount.</p>
+
+        <h2>5.3 &nbsp; Suspension for Non-Payment</h2>
+        <p>If any payment is more than <strong>thirty (30) days</strong> overdue, the Design Studio may suspend all work on the project until the outstanding balance is paid in full. The timeline shifts by the number of days the project was suspended.</p>
+      </section>
+
+      <!-- ============= SECTION 6 — Revisions ============= -->
+      <section class="section" id="section-6">
+        <div class="section-eyebrow">Section 06</div>
+        <h2 class="section-title"><span class="light">Revisions</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>6.1 &nbsp; Included Revisions</h2>
+        <p><span data-bind="tierName">The selected tier</span> includes <strong data-bind="tierRevisions">[X] revision rounds</strong>. A &ldquo;round of revision&rdquo; means one consolidated set of feedback from the Client, addressing one design phase.</p>
+
+        <h2>6.2 &nbsp; What Counts as a Revision</h2>
+        <p>A revision is a request to modify the design within the agreed creative direction &mdash; adjustments to type, color, layout, or composition. A revision is <strong>not</strong> a request to start over with a new direction. Requests for an entirely new direction are treated as new work and will be quoted separately.</p>
+
+        <h2>6.3 &nbsp; Additional Revisions</h2>
+        <p>If the Client requests revisions beyond <strong data-bind="tierRevisions">[the included rounds]</strong>, additional revisions will be charged at <strong data-bind="extraRevisionRate">[rate per round]</strong>. Additional revisions must be paid for before the revision work begins.</p>
+
+        <h2>6.4 &nbsp; What Triggers a New Revision Round</h2>
+        <p>A new revision round is triggered when the Client asks to <strong>change a creative decision that was already approved in writing</strong>, or to <strong>revisit a direction that was previously concluded</strong>. This includes:</p>
+        <ul>
+          <li>Reversing a decision the Client previously signed off on,</li>
+          <li>Asking to redo work that was approved at an earlier phase,</li>
+          <li>Introducing a new creative direction after one was already chosen, or</li>
+          <li>Requesting changes to elements that were locked in at a prior milestone.</li>
+        </ul>
+        <p>Asking the Design Studio to refine, polish, or adjust work that is currently in progress within an active phase is <strong>not</strong> a new revision round &mdash; that is part of the active round already underway. The distinction is between <strong>moving forward within an agreed direction</strong> (same round) and <strong>going back to change something already settled</strong> (new round).</p>
+      </section>
+
+      <!-- ============= SECTION 7 — Client Responsibilities ============= -->
+      <section class="section" id="section-7">
+        <div class="section-eyebrow">Section 07</div>
+        <h2 class="section-title">Client <span class="light">Responsibilities</span></h2>
+        <div class="section-rule"></div>
+
+        <p>The success of this project depends on the Client meeting the following responsibilities.</p>
+
+        <h2>7.1 &nbsp; Timely Feedback</h2>
+        <p>The Client must provide feedback within <strong>fourteen (14) days</strong> of receiving any work from the Design Studio. Delays beyond this window trigger <a href="#section-8">Section 8 (The Silence Protocol)</a>.</p>
+
+        <h2>7.2 &nbsp; Decision-Maker Authority</h2>
+        <p>The Client confirms that the person signing this contract has the authority to approve creative decisions on behalf of the Client's business. If approvals require sign-off from additional stakeholders, the Client is responsible for coordinating that internally and delivering one consolidated decision per round.</p>
+
+        <h2>7.3 &nbsp; Proofreading</h2>
+        <p>The Client is responsible for proofreading all deliverables before final approval &mdash; this includes spelling, grammar, contact details, addresses, prices, and all factual content. Once the Client gives final approval, any errors discovered after delivery will be corrected at the Client's expense at the rate of <strong data-bind="extraRevisionRate">[rate per correction]</strong>.</p>
+
+        <h2>7.4 &nbsp; Cultural and Subjective Interpretation</h2>
+        <p>The Design Studio is not an expert on every cultural, religious, or regional symbolism that may exist worldwide. If the Client becomes aware of any meaning, association, or interpretation in the work that they find objectionable, the Client must raise the concern in writing <strong>before final payment is made</strong>. The Design Studio will work with the Client to address and modify the work at no additional cost. Once final payment has been made, any further concerns about symbolism, meaning, or interpretation become the Client's responsibility, and any modifications will be quoted as new work.</p>
+
+        <h2>7.5 &nbsp; Third-Party Costs</h2>
+        <p>Any third-party costs required to deliver the project &mdash; including but not limited to font licenses, stock photography, illustration commissions, printing, and external software subscriptions &mdash; are paid by the Client. The Design Studio will obtain the Client's written approval before incurring any third-party cost on the Client's behalf.</p>
+
+        <h2>7.6 &nbsp; Source Materials</h2>
+        <p>The Client is responsible for providing any required source materials (existing logos, brand assets, photography, copy, product information) within <strong>seven (7) days</strong> of project kickoff. Delays in providing source materials extend the project timeline by the same number of days.</p>
+      </section>
+
+      <!-- ============= SECTION 8 — Silence Protocol ============= -->
+      <section class="section" id="section-8">
+        <div class="section-eyebrow">Section 08</div>
+        <h2 class="section-title">The Silence <span class="light">Protocol</span></h2>
+        <div class="section-rule"></div>
+
+        <p>This section explains what happens when the Client stops responding during the project. It exists because client silence is the single most damaging thing that can happen to a creative project, and clear rules protect both parties.</p>
+
+        <div class="layer-block">
+          <span class="layer-tag">Layer 01 &nbsp;·&nbsp; Day 15+</span>
+          <div class="layer-title">The Pause Clause</div>
+          <p>If the Client fails to respond to the Design Studio's request for feedback or approval for <strong>fifteen (15) consecutive days</strong>, the Design Studio has the right to formally pause the project. When a project is paused:</p>
+          <ul>
+            <li>The Design Studio's obligation to meet the original timeline ends.</li>
+            <li>The project is removed from the active production schedule.</li>
+            <li>The Design Studio is free to take on other work in the slot previously held for the Client.</li>
+            <li>A <strong>restart fee of fifteen percent (15%) of the remaining project value</strong> must be paid before work can resume.</li>
+            <li>A new timeline will be agreed in writing once the restart fee is paid.</li>
+          </ul>
+        </div>
+
+        <div class="layer-block">
+          <span class="layer-tag">Layer 02 &nbsp;·&nbsp; Day 30</span>
+          <div class="layer-title">No-Communication Termination</div>
+          <p>If the Client remains unresponsive for <strong>thirty (30) consecutive days</strong> with no contact at all &mdash; no replies to emails, no acknowledgment of messages, no engagement on any agreed channel &mdash; the project is automatically considered cancelled. When this happens:</p>
+          <ul>
+            <li>The contract is terminated.</li>
+            <li>All deposits and payments made to date are forfeited and non-refundable.</li>
+            <li>All concepts, drafts, and work in progress remain the sole property of the Design Studio.</li>
+            <li>The Client receives no deliverables, files, or rights to any work produced.</li>
+          </ul>
+        </div>
+
+        <div class="layer-block">
+          <span class="layer-tag">Layer 03 &nbsp;·&nbsp; Day 60+</span>
+          <div class="layer-title">Right of Refusal</div>
+          <p>If a project has been paused under Layer One, and the Client wishes to restart the project after <strong>sixty (60) days or more</strong> of inactivity, the Design Studio has the sole right to decline restart. Reasons may include &mdash; but are not limited to &mdash; production capacity, changes in the Design Studio's pricing, or a determination that the original creative direction is no longer current. If restart is declined, any deposits or payments already made are forfeited as compensation for time and slot reservation.</p>
+        </div>
+
+        <h2>8.4 &nbsp; Notice of Each Layer</h2>
+        <p>The Design Studio will notify the Client in writing (by the agreed communication channel) when each layer is triggered, giving the Client a final 48-hour window to respond before the next consequence applies.</p>
+      </section>
+
+      <!-- ============= SECTION 9 — Ownership ============= -->
+      <section class="section" id="section-9">
+        <div class="section-eyebrow">Section 09</div>
+        <h2 class="section-title">Ownership &amp; <span class="light">Rights</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>9.1 &nbsp; Ownership Before Final Payment</h2>
+        <p>Until the final payment under this contract is received in full, all work produced by the Design Studio &mdash; including concepts, drafts, sketches, presentations, source files, and final designs &mdash; remains the sole property of the Design Studio. The Client has no right to use, reproduce, share, or modify any of this work before final payment is made.</p>
+
+        <h2>9.2 &nbsp; Ownership After Final Payment</h2>
+        <p>Once full payment has been received, the Design Studio transfers to the Client a <strong>worldwide, perpetual, non-exclusive license</strong> to use the agreed final deliverables for the Client's business purposes &mdash; including reproduction, display, distribution, and modification across print and digital media.</p>
+
+        <h2>9.3 &nbsp; Unused Concepts</h2>
+        <p>Any concepts, drafts, alternative directions, or sketches that were presented to the Client but <strong>not selected as the final design</strong> remain the sole property of the Design Studio. The Client may not use, reproduce, store, or commission another designer to recreate any unused concept. The Design Studio reserves the right to use unused concepts in its own portfolio, future client work, or for any other purpose.</p>
+
+        <h2>9.4 &nbsp; Source Files</h2>
+        <p>The Client receives the editable source files (.AI, .PSD, .FIG, etc.) for the agreed final deliverables only after full payment. Source files for unused concepts are never released.</p>
+
+        <h2>9.5 &nbsp; Portfolio Rights</h2>
+        <p>The Design Studio reserves the right to display all completed work for this project in its portfolio, on its website, on social media, in case studies, in published interviews, in award submissions, and in any other promotional material. By default, this right activates upon project delivery.</p>
+
+        <h2>9.6 &nbsp; Confidentiality Window for Sensitive Launches</h2>
+        <p>If the Client's project involves a sensitive launch (a new product, rebrand, funding announcement, or other time-sensitive moment), the Client may request a <strong>portfolio publication delay of up to six (6) months</strong> from project completion. This request must be made in writing before project kickoff and noted in Schedule B.</p>
+
+        <h2>9.7 &nbsp; Credit Attribution</h2>
+        <p>Credit attribution is appreciated but not required. When the Client publicly shares the brand assets created under this contract, they are encouraged to credit the Design Studio as <strong>&ldquo;Designed by AWESOME&rdquo;</strong> or by tagging <strong>@awesomebydesign</strong> on social media. This credit is a courtesy, not a contractual obligation.</p>
+
+        <h2>9.8 &nbsp; Third-Party License Compliance</h2>
+        <p>For any third-party assets used in the final deliverables (fonts, stock images, icons, plugins), the Client is responsible for maintaining the necessary licenses going forward. The Design Studio will provide a list of all third-party assets used and their licensing terms upon delivery.</p>
+
+        <h2>9.9 &nbsp; Copyright Registration</h2>
+        <p>The Design Studio recommends that the Client register the final brand assets with the <strong>Nigerian Copyright Commission (NCC)</strong> to strengthen the Client's ownership. The cost and process of registration is the Client's responsibility.</p>
+      </section>
+
+      <!-- ============= SECTION 10 — Termination ============= -->
+      <section class="section" id="section-10">
+        <div class="section-eyebrow">Section 10</div>
+        <h2 class="section-title">Termination &amp; <span class="light">Kill Fee</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>10.1 &nbsp; Termination by the Client</h2>
+        <p>The Client may terminate this contract at any time by giving the Design Studio written notice. The financial consequences depend on when termination happens:</p>
+
+        <h3>Before work begins (after deposit paid)</h3>
+        <p>The deposit is non-refundable. No further amount is owed.</p>
+
+        <h3>After work has begun</h3>
+        <p>The Client must pay:</p>
+        <ul>
+          <li><strong>(a)</strong> The full deposit <strong>(non-refundable)</strong>, plus</li>
+          <li><strong>(b)</strong> Payment for the portion of work already completed up to the date of termination &mdash; calculated based on the project phase reached <strong>(see Section 10.4 below)</strong>, plus</li>
+          <li><strong>(c)</strong> <strong>Fifty percent (50%) of the remaining contract value</strong> as compensation for the slot held and committed time.</li>
+        </ul>
+        <p>The Design Studio will issue a final invoice covering items (b) and (c) within <strong>seven (7) days</strong> of receiving the termination notice. Payment is due within <strong>fourteen (14) days</strong> of the final invoice.</p>
+
+        <h2>10.2 &nbsp; Termination by the Design Studio</h2>
+        <p>The Design Studio may terminate this contract at any time if:</p>
+        <ul>
+          <li><strong>(a)</strong> The Client breaches any term of this agreement,</li>
+          <li><strong>(b)</strong> The Client engages in unprofessional, abusive, or harassing behavior,</li>
+          <li><strong>(c)</strong> The Client fails to pay any amount due under this contract for more than thirty (30) days after the due date,</li>
+          <li><strong>(d)</strong> The Client provides false information about their business, identity, or the nature of the project, or</li>
+          <li><strong>(e)</strong> The Client demonstrates excessive micromanagement, repeated disregard for agreed creative direction, or unwillingness to make project decisions in good faith.</li>
+        </ul>
+        <p>If the Design Studio terminates the contract under any of the reasons above, all amounts paid to date are forfeited, and the Design Studio retains full ownership of all work produced.</p>
+
+        <h2>10.3 &nbsp; Mutual Termination</h2>
+        <p>The Parties may agree to terminate the contract by mutual written consent. The financial settlement in such cases will be agreed in writing at the time of termination.</p>
+
+        <h2>10.4 &nbsp; Phase-Based Calculation of Completed Work</h2>
+        <p>For Section 10.1(b), the value of completed work is calculated by which phase the project reached at the date of termination:</p>
+
+        <table id="killTable">
+          <thead>
+            <tr><th>Phase Completed</th><th>% of Contract Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Discovery only</td><td><strong>15%</strong></td></tr>
+            <tr class="tier-only-strategy" data-strategy-row><td>Discovery + Strategy</td><td><strong>30%</strong></td></tr>
+            <tr><td>Visual Direction presented</td><td><strong>50%</strong></td></tr>
+            <tr><td>Design phase begun</td><td><strong>70%</strong></td></tr>
+            <tr><td>Refinement phase</td><td><strong>90%</strong></td></tr>
+            <tr><td>Final delivery prepared</td><td><strong>100%</strong></td></tr>
+          </tbody>
+        </table>
+
+        <p>The percentages above are based on <span data-bind="tierName">the original total project value</span> (<strong data-bind="tierPrice">[$ AMOUNT]</strong>) and are paid in addition to the non-refundable deposit and the 50% remaining-value compensation.</p>
+      </section>
+
+      <!-- ============= SECTION 11 — Communication ============= -->
+      <section class="section" id="section-11">
+        <div class="section-eyebrow">Section 11</div>
+        <h2 class="section-title">Communication <span class="light">Standards</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>11.1 &nbsp; Approved Communication Channels</h2>
+        <p>All project communication will happen through one or more of the following channels:</p>
+        <ul>
+          <li><strong>Email</strong> &mdash; hello@awesomebydesign.studio <em>(primary, official record)</em></li>
+          <li><strong>WhatsApp Business</strong> &mdash; +234 806 282 8409 <em>(quick check-ins, file previews)</em></li>
+          <li><strong>Notion Client Portal</strong> &mdash; <em>(provided at project kickoff &mdash; primary for project management, feedback consolidation, and asset delivery)</em></li>
+        </ul>
+        <p>Communication through any other channel &mdash; including personal social media DMs, text messages to personal phone numbers, or third-party messaging apps &mdash; does not constitute official project communication and will not be considered binding.</p>
+
+        <h2>11.2 &nbsp; Working Hours</h2>
+        <p>The Design Studio's working hours are <strong>Monday to Friday, 9:00 AM to 6:00 PM West African Time (WAT, UTC+1)</strong>. The Design Studio does not work on Saturdays, Sundays, or Nigerian public holidays unless agreed in writing for a specific deadline.</p>
+
+        <h2>11.3 &nbsp; Response Time Commitment</h2>
+        <p>The Design Studio commits to responding to all Client communication received during working hours within <strong>forty-eight (48) hours (two business days)</strong>. Communication received outside working hours will be acknowledged on the next business day.</p>
+
+        <h2 class="country-only-international" style="display:none;">11.4 &nbsp; Time-Zone Accommodation</h2>
+        <p class="country-only-international" style="display:none;">For this international engagement, the Parties may agree in writing to a specific weekly call schedule. Outside scheduled calls, the response window in 11.3 still applies.</p>
+      </section>
+
+      <!-- ============= SECTION 12 — Confidentiality ============= -->
+      <section class="section" id="section-12">
+        <div class="section-eyebrow">Section 12</div>
+        <h2 class="section-title"><span class="light">Confidentiality</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>12.1 &nbsp; Mutual Confidentiality</h2>
+        <p>Both Parties agree to keep confidential any information shared during this project that is marked confidential, that is clearly sensitive in nature, or that a reasonable person would understand to be private business information. This includes &mdash; but is not limited to &mdash; financial information, customer lists, internal strategy documents, unreleased products, and pricing information.</p>
+
+        <h2>12.2 &nbsp; Exceptions</h2>
+        <p>This confidentiality obligation does not apply to information that:</p>
+        <ul>
+          <li><strong>(a)</strong> Is or becomes publicly available through no fault of the receiving Party,</li>
+          <li><strong>(b)</strong> Was already known to the receiving Party before the project began,</li>
+          <li><strong>(c)</strong> Must be disclosed by law, court order, or government regulation, or</li>
+          <li><strong>(d)</strong> Is the brand work itself, once it has been publicly launched by the Client.</li>
+        </ul>
+
+        <h2>12.3 &nbsp; Duration</h2>
+        <p>The confidentiality obligation under this section continues for <strong>two (2) years</strong> after the project ends or this contract is terminated, whichever happens first.</p>
+      </section>
+
+      <!-- ============= SECTION 13 — Interpretation ============= -->
+      <section class="section" id="section-13">
+        <div class="section-eyebrow">Section 13</div>
+        <h2 class="section-title">Interpretation <span class="light">Disclaimer</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>13.1 &nbsp; Scope of Expertise</h2>
+        <p>The Design Studio is a brand design studio. It is not a law firm, a trademark agency, a market research firm, or a cultural consultancy. The work delivered under this contract is creative work, not legal, regulatory, or cultural advice.</p>
+
+        <h2>13.2 &nbsp; Trademark and Legal Clearance</h2>
+        <p>The Design Studio does not perform trademark searches or legal clearance on any name, logo, or brand mark created under this contract. The Client is solely responsible for ensuring that any name, logo, slogan, or visual mark created in this project does not infringe on any existing trademark, copyright, or intellectual property right held by another party. The Client is encouraged to engage a qualified trademark attorney before using any new brand mark commercially.</p>
+
+        <h2>13.3 &nbsp; Cultural and Symbolic Interpretation</h2>
+        <p>As stated in <a href="#section-7">Section 7.4</a>, the Design Studio is not an expert on every cultural, religious, regional, or industry-specific meaning that may attach to a visual element. The Client bears responsibility for raising any cultural concerns before final payment.</p>
+      </section>
+
+      <!-- ============= SECTION 14 — Limitation of Liability ============= -->
+      <section class="section" id="section-14">
+        <div class="section-eyebrow">Section 14</div>
+        <h2 class="section-title">Limitation of <span class="light">Liability</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>14.1 &nbsp; What This Section Does</h2>
+        <p>This section sets the maximum amount the Client can recover from the Design Studio if a dispute arises under this contract. It does not excuse the Design Studio from doing the work properly. It exists to ensure that disputes are resolved in proportion to the value of the contract &mdash; not by sums of money far exceeding what the project was worth.</p>
+
+        <h2>14.2 &nbsp; Cap on Damages</h2>
+        <p>The Design Studio's total liability under this contract &mdash; for any claim, whether based on breach of contract, negligence, or any other legal theory &mdash; is limited to <strong>fifty percent (50%) of the total amount the Client has actually paid to the Design Studio under this contract</strong> at the time the claim arises.</p>
+
+        <h2>14.3 &nbsp; Exclusion of Indirect Damages</h2>
+        <p>The Design Studio is not liable for any indirect, incidental, consequential, or punitive damages &mdash; including but not limited to lost profits, lost revenue, lost business opportunities, lost goodwill, or reputational damage &mdash; even if the Design Studio was advised of the possibility of such damages.</p>
+
+        <h2>14.4 &nbsp; Carve-Outs</h2>
+        <p>The cap and exclusions in this section do not apply to:</p>
+        <ul>
+          <li><strong>(a)</strong> Liability for fraud, willful misconduct, or gross negligence,</li>
+          <li><strong>(b)</strong> Any liability that cannot be excluded under Nigerian law, or</li>
+          <li><strong>(c)</strong> Breach of confidentiality obligations under <a href="#section-12">Section 12</a>.</li>
+        </ul>
+      </section>
+
+      <!-- ============= SECTION 15 — Governing Law ============= -->
+      <section class="section" id="section-15">
+        <div class="section-eyebrow">Section 15</div>
+        <h2 class="section-title">Governing Law &amp; <span class="light">Disputes</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>15.1 &nbsp; Governing Law</h2>
+        <p>This contract is governed by, and interpreted under, the laws of the <strong>Federal Republic of Nigeria</strong>.</p>
+
+        <h2>15.2 &nbsp; First Step &mdash; Direct Negotiation</h2>
+        <p>Before any formal dispute proceeding, the Parties agree to attempt to resolve any dispute through direct, good-faith negotiation. Either Party may initiate this by sending a written notice describing the dispute. The Parties have <strong>thirty (30) days</strong> from the date of the notice to reach a resolution.</p>
+
+        <div class="country-only-local" style="display:none;">
+          <h2>15.3 &nbsp; If Negotiation Fails</h2>
+          <p>If the Parties cannot resolve the dispute through direct negotiation, the dispute will be submitted to the <strong>courts of Lagos State, Nigeria</strong>, which will have exclusive jurisdiction.</p>
+        </div>
+
+        <div class="country-only-international" style="display:none;">
+          <h2>15.3 &nbsp; If Negotiation Fails &mdash; Arbitration</h2>
+          <p>If the Parties cannot resolve the dispute through direct negotiation, the dispute will be settled by <strong>arbitration</strong> under the Lagos Court of Arbitration Rules. The arbitration will be:</p>
+          <ul>
+            <li><strong>(a)</strong> Seated in Lagos, Nigeria,</li>
+            <li><strong>(b)</strong> Conducted in the English language,</li>
+            <li><strong>(c)</strong> Heard by a single arbitrator agreed by both Parties (or appointed by the Lagos Court of Arbitration if the Parties cannot agree within fourteen (14) days), and</li>
+            <li><strong>(d)</strong> Final and binding on both Parties.</li>
+          </ul>
+          <p>The arbitration award will be enforceable in any country that is a signatory to the <strong>New York Convention on the Recognition and Enforcement of Foreign Arbitral Awards (1958)</strong>.</p>
+        </div>
+
+        <h2>15.4 &nbsp; Costs of Dispute Resolution</h2>
+        <p>Each Party bears its own legal costs during direct negotiation. In arbitration or court proceedings, the losing Party pays the reasonable legal costs of the winning Party, unless the arbitrator or court rules otherwise.</p>
+      </section>
+
+      <!-- ============= SECTION 16 — Force Majeure ============= -->
+      <section class="section" id="section-16">
+        <div class="section-eyebrow">Section 16</div>
+        <h2 class="section-title">Force <span class="light">Majeure</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>16.1 &nbsp; Definition</h2>
+        <p>Neither Party is liable for any delay or failure to perform its obligations under this contract if the delay or failure is caused by an event beyond that Party's reasonable control. Such events include &mdash; but are not limited to &mdash; natural disasters, government actions, war, civil unrest, pandemic, prolonged power or internet outages, and serious illness of the Founder &amp; Creative Director.</p>
+
+        <h2>16.2 &nbsp; Notice and Mitigation</h2>
+        <p>The Party affected by a force majeure event must notify the other Party in writing as soon as reasonably possible and must take reasonable steps to minimize the delay or impact.</p>
+
+        <h2>16.3 &nbsp; Extended Force Majeure</h2>
+        <p>If a force majeure event continues for more than <strong>sixty (60) days</strong>, either Party may terminate this contract by written notice. In this case, the Client pays for all work completed up to the date of the force majeure event (calculated under Section 10.4), but no kill fee under Section 10.1(c) applies.</p>
+      </section>
+
+      <!-- ============= SECTION 17 — General ============= -->
+      <section class="section" id="section-17">
+        <div class="section-eyebrow">Section 17</div>
+        <h2 class="section-title">General <span class="light">Provisions</span></h2>
+        <div class="section-rule"></div>
+
+        <h2>17.1 &nbsp; Entire Agreement</h2>
+        <p>This contract &mdash; together with Schedule A and Schedule B &mdash; is the complete and final agreement between the Parties regarding the project. It replaces all earlier discussions, proposals, emails, WhatsApp messages, voice notes, and verbal agreements.</p>
+
+        <h2>17.2 &nbsp; Amendments</h2>
+        <p>Any change to this contract must be made in writing, signed by both Parties (electronically through Dropbox Sign or by physical signature), and attached to this contract as an addendum. Verbal changes have no effect.</p>
+
+        <h2>17.3 &nbsp; Severability</h2>
+        <p>If any clause of this contract is held to be invalid or unenforceable by a court or arbitrator, the rest of the contract continues in full force. The invalid clause will be replaced by a valid clause that comes as close as possible to the original intent.</p>
+
+        <h2>17.4 &nbsp; No Waiver</h2>
+        <p>If either Party fails to enforce any right or clause under this contract on any occasion, that does not mean the right is waived. The Party can enforce it on any future occasion.</p>
+
+        <h2>17.5 &nbsp; Assignment</h2>
+        <p>The Client may not transfer or assign this contract to any other person or business without the Design Studio's written consent. The Design Studio may delegate parts of the work to trusted contractors or freelancers, but remains fully responsible for the quality and delivery of the work.</p>
+
+        <h2>17.6 &nbsp; Independent Contractor Status</h2>
+        <p>The Design Studio is an independent contractor, not an employee, partner, or joint venture of the Client. Nothing in this contract creates an employment, partnership, or agency relationship between the Parties.</p>
+
+        <h2>17.7 &nbsp; Notices</h2>
+        <p>All formal notices under this contract &mdash; including termination notices, breach notices, and dispute notices &mdash; must be sent by email to the addresses listed in Section 1, with a copy by WhatsApp to the number listed in Section 11.1.</p>
+
+        <h2>17.8 &nbsp; Counterparts and Electronic Signature</h2>
+        <p>This contract may be signed in counterparts, including electronically through Dropbox Sign. Electronic signatures and counterpart signatures have the same legal force as physical wet-ink signatures, in accordance with the Nigerian Evidence Act (2011) and the Electronic Transactions Act.</p>
+      </section>
+
+      <!-- ============= SCHEDULE A ============= -->
+      <section class="section" id="schedule-a">
+        <div class="section-eyebrow">Schedule A</div>
+        <h2 class="section-title">Deliverables <span class="light">by Tier</span></h2>
+        <div class="section-rule"></div>
+
+        <p>The deliverables listed below are the only items included in this contract. Any item not listed here is out of scope and must be quoted separately. Once you select a tier above, the chosen tier will be highlighted and the others will be dimmed.</p>
+
+        <div class="tier-schedule" data-tier-card="start">
+          <div class="tier-schedule-name">Awesome <span class="light">Start</span></div>
+          <div class="tier-schedule-price">Tier 01 &nbsp;·&nbsp; $1,000 USD</div>
+          <div class="tier-schedule-tagline">Ideal for new brands or businesses that require a solid visual foundation to attract their target audience. Provides minimal brand essentials that make the business look credible, cohesive, and ready for launch &mdash; without a deep dive into brand strategy.</div>
+          <table>
+            <tbody>
+              <tr><td>Visual Direction</td><td>&times; 1</td></tr>
+              <tr><td>Logo Variants</td><td>&times; 2</td></tr>
+              <tr><td>Color Palette</td><td>Included</td></tr>
+              <tr><td>Typography System</td><td>Included</td></tr>
+              <tr><td>Brand Sheet</td><td>Included</td></tr>
+              <tr><td>Revisions</td><td>&times; 2 rounds</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tier-schedule" data-tier-card="elevate">
+          <div class="tier-schedule-name">Awesome <span class="light">Elevate</span></div>
+          <div class="tier-schedule-price">Tier 02 &nbsp;·&nbsp; $1,500 USD</div>
+          <div class="tier-schedule-tagline">Perfect for growing brands aiming to elevate their presence. Integrates strategic clarity and captivating visuals to position the brand as premium and memorable, enhancing the customer experience with bespoke packaging, prints, and marketing assets.</div>
+          <table>
+            <tbody>
+              <tr><td>Brand Strategy</td><td>Included</td></tr>
+              <tr><td>Visual Direction</td><td>&times; 3</td></tr>
+              <tr><td>Logo Variants</td><td>&times; 5</td></tr>
+              <tr><td>Color Palette &amp; Typography System</td><td>Included</td></tr>
+              <tr><td>Brand Sheet + Brand Guideline Document</td><td>Included</td></tr>
+              <tr><td>Social Media Templates / Launch Designs</td><td>Included</td></tr>
+              <tr><td>Brand Mockup Designs for Print</td><td>Included</td></tr>
+              <tr><td>Revisions</td><td>&times; 3 rounds</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tier-schedule" data-tier-card="legacy">
+          <div class="tier-schedule-name">Awesome <span class="light">Legacy</span></div>
+          <div class="tier-schedule-price">Tier 03 &nbsp;·&nbsp; $5,000 USD</div>
+          <div class="tier-schedule-tagline">Designed for scaling brands ready to dominate their industry. Offers end-to-end strategic branding crafting a powerful, cohesive visual identity that builds customer loyalty, boosts market visibility, and creates a lasting legacy for years to come.</div>
+          <table>
+            <tbody>
+              <tr><td>Everything in AWESOME ELEVATE</td><td>Included</td></tr>
+              <tr><td>Custom Website Design</td><td>Included</td></tr>
+              <tr><td>Custom Packaging Design</td><td>Included</td></tr>
+              <tr><td>Revisions</td><td>&times; 2 rounds per project area</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============= SCHEDULE B — Project Details (fillable) ============= -->
+      <section class="section" id="schedule-b">
+        <div class="section-eyebrow">Schedule B</div>
+        <h2 class="section-title">Project-Specific <span class="light">Details</span></h2>
+        <div class="section-rule"></div>
+
+        <p>Fill in the details below. These are stored with your signed contract.</p>
+
+        <div class="callout">
+          <div class="callout-title">Project Name</div>
+          <input type="text" class="field-input" id="projectName" placeholder="A short name for this project (e.g. Acme Co. Rebrand)">
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Project Brief Summary</div>
+          <textarea class="field-textarea" id="projectBrief" placeholder="A short summary of the brief — what's the brand, who's it for, what does success look like?" rows="4"></textarea>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Specific Industry / Sector</div>
+          <input type="text" class="field-input" id="industry" placeholder="e.g. Fintech, Beauty, F&B, SaaS, Hospitality">
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Sensitive Launch — Portfolio Delay Requested?</div>
+          <div class="callout-body">
+            <div class="tier-row" style="border-bottom: none; padding: 6px 0;" data-portfolio="yes">
+              <span class="tier-checkbox"></span>
+              <span class="tier-name" style="font-size: 14px;">Yes &mdash; delay portfolio publishing for up to 6 months after delivery</span>
+            </div>
+            <div class="tier-row" style="border-bottom: none; padding: 6px 0;" data-portfolio="no">
+              <span class="tier-checkbox"></span>
+              <span class="tier-name" style="font-size: 14px;">No &mdash; portfolio rights activate on delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Custom Variations from Standard Tier (optional)</div>
+          <textarea class="field-textarea" id="customVariations" placeholder="Any specific changes to the tier deliverables that have been agreed in advance..." rows="3"></textarea>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">Agreed Special Terms (optional)</div>
+          <textarea class="field-textarea" id="specialTerms" placeholder="Any other terms, NDAs, or specific commitments agreed for this project..." rows="3"></textarea>
+        </div>
+      </section>
+
+      <!-- ============= SIGN BLOCK ============= -->
+      <section class="sign-section" id="sign">
+        <div class="sign-content">
+          <div class="sign-eyebrow">Section 18 &nbsp;·&nbsp; Acceptance</div>
+          <h2 class="sign-headline">Sign &amp; Build<br>Something <span class="light">Awesome</span></h2>
+          <p class="sign-confirmation">By signing this contract through Dropbox Sign, both Parties confirm they have read this contract in full, understand its terms, and have the authority to enter into this agreement on behalf of the Party they represent.</p>
+
+          <!-- Live summary of selected options -->
+          <div class="sign-summary" id="signSummary">
+            <div class="sign-summary-title">Your Contract Summary</div>
+            <div class="sign-summary-row">
+              <span class="sign-summary-label">Client</span>
+              <span class="sign-summary-value empty" data-summary="clientName">—</span>
+            </div>
+            <div class="sign-summary-row">
+              <span class="sign-summary-label">Country</span>
+              <span class="sign-summary-value empty" data-summary="country">—</span>
+            </div>
+            <div class="sign-summary-row">
+              <span class="sign-summary-label">Tier</span>
+              <span class="sign-summary-value empty" data-summary="tier">—</span>
+            </div>
+            <div class="sign-summary-row">
+              <span class="sign-summary-label">Investment</span>
+              <span class="sign-summary-value empty" data-summary="price">—</span>
+            </div>
+            <div class="sign-summary-row">
+              <span class="sign-summary-label">Project Window</span>
+              <span class="sign-summary-value empty" data-summary="window">—</span>
+            </div>
+          </div>
+
+          <div class="sign-cta-block">
+            <button type="button" class="sign-cta disabled" id="signBtn" disabled>
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 4l5 5 5-5v2L8 11 3 6V4z"/></svg>
+              <span>Sign with Dropbox Sign</span>
+            </button>
+            <a href="#" class="sign-secondary" id="downloadBtn">Download PDF</a>
+          </div>
+
+          <div class="sign-status" id="signStatus"></div>
+
+          <div class="wax-seal-wrap">
+            <div class="wax-seal-mark" id="waxSeal"></div>
+          </div>
+          <div class="sign-tagline">Sealed in pursuit of the awesome.</div>
+
+          <div class="sign-fineprint">Electronic signatures are legally binding under the Nigerian Evidence Act (2011) and the Electronic Transactions Act.</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>THE AWESOME DESIGN STUDIO LTD &nbsp;·&nbsp; LAGOS, NIGERIA</span>
+    <span class="footer-right">awesomebydesign.studio &nbsp;·&nbsp; 2026 ©</span>
+  </div>
+</footer>
+
+<!-- ============================================================
+     SCRIPT — reactive contract logic + Dropbox Sign integration
+     ============================================================ -->
+<script>
+/* ============================================================
+   CONFIGURATION
+   API key for Dropbox Sign embedded signing.
+
+   ⚠️  PRODUCTION SECURITY NOTE:
+   This key is exposed in client-side code. For production, the actual
+   API key (used to CREATE signature requests) should live in a Vercel
+   environment variable named DROPBOX_SIGN_API_KEY and only be
+   accessed from /api/sign.js (server-side). The CLIENT_ID below is
+   safe to expose — it's a public identifier used by the embedded SDK.
+   ============================================================ */
+
+const DROPBOX_SIGN_CLIENT_ID = '4de7afdc22788c66ca6604f466e51f846cafbfe66cbcddfacd72fbef92db0b29';
+const TEST_MODE = true; // set to false in production (live mode signature requests)
+
+/* ============================================================
+   STATE
+   ============================================================ */
+
+const state = {
+  // Setup
+  country: '',
+  tier: '',
+  startDate: '',
+
+  // Section 1 — Client info
+  clientName: '',
+  clientAddress: '',
+  clientEmail: '',
+  clientPhone: '',
+
+  // Section 2 — Project description
+  projectDescription: '',
+
+  // Section 4 — Payment selection
+  payment: '',
+
+  // Schedule B
+  projectName: '',
+  projectBrief: '',
+  industry: '',
+  portfolioDelay: '',
+  customVariations: '',
+  specialTerms: ''
+};
+
+/* ============================================================
+   TIER & COUNTRY CONFIGURATION
+   ============================================================ */
+
+const TIER_CONFIG = {
+  start: {
+    name: 'AWESOME START',
+    title: 'Awesome Start',
+    priceUSD: 1000,
+    durationWeeks: 4,
+    durationText: 'approximately 4 weeks',
+    revisions: '2 revision rounds',
+    deliveryWeek: 'Week 4',
+    hasStrategy: false
+  },
+  elevate: {
+    name: 'AWESOME ELEVATE',
+    title: 'Awesome Elevate',
+    priceUSD: 1500,
+    durationWeeks: 8,
+    durationText: '6 to 8 weeks',
+    revisions: '3 revision rounds',
+    deliveryWeek: 'Week 6–8',
+    hasStrategy: true
+  },
+  legacy: {
+    name: 'AWESOME LEGACY',
+    title: 'Awesome Legacy',
+    priceUSD: 5000,
+    durationWeeks: 12,
+    durationText: '10 to 12 weeks',
+    revisions: '2 revision rounds per project area',
+    deliveryWeek: 'Week 10–12',
+    hasStrategy: true
+  }
+};
+
+const EXTRA_REVISION_USD = '$100 USD per additional revision round';
+const EXTRA_REVISION_NGN = '₦150,000 NGN per additional revision round';
+
+const COUNTRY_LABELS = {
+  NG: 'Nigeria', US: 'United States', GB: 'United Kingdom', CA: 'Canada',
+  DE: 'Germany', FR: 'France', ES: 'Spain', IT: 'Italy', NL: 'Netherlands',
+  AU: 'Australia', NZ: 'New Zealand', ZA: 'South Africa', KE: 'Kenya',
+  GH: 'Ghana', EG: 'Egypt', AE: 'United Arab Emirates', SA: 'Saudi Arabia',
+  SG: 'Singapore', JP: 'Japan', CN: 'China', IN: 'India', BR: 'Brazil',
+  MX: 'Mexico', OTHER: 'International'
+};
+
+const isLocal = () => state.country === 'NG';
+
+/* ============================================================
+   ELEMENT REFERENCES
+   ============================================================ */
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+/* ============================================================
+   LOAD LOGO INTO TOPBAR + HERO + WAX SEAL
+   ============================================================ */
+
+async function loadLogo() {
+  // Topbar mark — small horizontal logo
+  const topMark = $('#topbarMark');
+  // Hero mark — large logo
+  const heroMark = $('#heroMark');
+
+  // Try to load actual logo, fall back to inline text rendering
+  try {
+    const res = await fetch('./assets/logo/awesome-wordmark.svg');
+    if (res.ok) {
+      const svg = await res.text();
+      topMark.innerHTML = svg;
+      heroMark.innerHTML = svg;
+
+      // Color the topbar version stop-red, the hero stays as-is
+      const topSvg = topMark.querySelector('svg');
+      if (topSvg) topSvg.style.color = 'var(--stop)';
+    } else {
+      throw new Error('Logo not found');
+    }
+  } catch (err) {
+    // Fallback inline wordmark
+    const fallback = `<span style="font-family: var(--serif); font-size: 28px; color: var(--stop); font-weight: 400; letter-spacing: -0.02em;">aw<span style="font-style: italic;">ęsome</span></span>`;
+    const fallbackBig = `<span style="font-family: var(--serif); font-size: 96px; color: var(--stop); font-weight: 400; letter-spacing: -0.02em; line-height: 1;">aw<span style="font-style: italic;">ęsome</span></span>`;
+    topMark.innerHTML = fallback;
+    heroMark.innerHTML = fallbackBig;
+  }
+}
+
+async function loadWaxSeal() {
+  const inlineSeal = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <defs>
+      <radialGradient id="waxBody2" cx="0.32" cy="0.28" r="0.85">
+        <stop offset="0%" stop-color="#f4dba0"/>
+        <stop offset="20%" stop-color="#e3bc73"/>
+        <stop offset="55%" stop-color="#b88a3e"/>
+        <stop offset="85%" stop-color="#7a5520"/>
+        <stop offset="100%" stop-color="#3d2a0d"/>
+      </radialGradient>
+      <radialGradient id="innerLight2" cx="0.35" cy="0.3" r="0.5">
+        <stop offset="0%" stop-color="rgba(255,235,180,0.6)"/>
+        <stop offset="100%" stop-color="rgba(255,235,180,0)"/>
+      </radialGradient>
+      <radialGradient id="centerWell2" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0%" stop-color="rgba(60,38,10,0)"/>
+        <stop offset="60%" stop-color="rgba(60,38,10,0.15)"/>
+        <stop offset="100%" stop-color="rgba(40,20,5,0.4)"/>
+      </radialGradient>
+    </defs>
+    <path fill="url(#waxBody2)"
+      d="M 100,12 C 118,10 132,18 146,26 C 160,34 172,46 178,62 C 184,78 188,94 188,108 C 188,124 184,140 174,154 C 164,168 152,178 138,184 C 124,190 110,192 96,190 C 80,188 64,182 50,172 C 36,162 24,148 18,132 C 12,116 10,98 14,82 C 18,66 26,52 38,38 C 50,24 66,16 82,12 C 88,11 94,12 100,12 Z"/>
+    <ellipse cx="76" cy="62" rx="44" ry="30" fill="url(#innerLight2)"/>
+    <circle cx="100" cy="100" r="62" fill="url(#centerWell2)"/>
+    <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(50,28,8,0.3)" stroke-width="1"/>
+    <circle cx="100" cy="100" r="58" fill="none" stroke="rgba(255,220,150,0.25)" stroke-width="0.5"/>
+    <text x="100" y="115" font-family="EB Garamond, Georgia, serif" font-size="48"
+          font-weight="600" text-anchor="middle" fill="#3d2710">aw<tspan font-style="italic">ę</tspan>.</text>
+  </svg>`;
+
+  try {
+    const res = await fetch('./assets/seal/awesome-seal.svg');
+    if (res.ok) {
+      $('#waxSeal').innerHTML = await res.text();
+    } else {
+      $('#waxSeal').innerHTML = inlineSeal;
+    }
+  } catch (err) {
+    $('#waxSeal').innerHTML = inlineSeal;
+  }
+}
+
+/* ============================================================
+   REACTIVE UPDATE FUNCTIONS
+   ============================================================ */
+
+function fmtUSD(n) {
+  return '$' + n.toLocaleString('en-US') + ' USD';
+}
+
+function fmtUSDApprox(n) {
+  return fmtUSD(n);
+}
+
+function calcEndDate(startDateStr, weeks) {
+  if (!startDateStr) return '';
+  const d = new Date(startDateStr);
+  if (isNaN(d.getTime())) return '';
+  d.setDate(d.getDate() + weeks * 7);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function fmtDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function update() {
+  const tier = state.tier ? TIER_CONFIG[state.tier] : null;
+  const local = isLocal();
+
+  // === Country-aware visibility ===
+  $$('.country-only-local').forEach(el => {
+    el.style.display = (state.country && local) ? '' : 'none';
+  });
+  $$('.country-only-international').forEach(el => {
+    el.style.display = (state.country && !local) ? '' : 'none';
+  });
+  // Hide pending message once a country is chosen
+  const pending = $('#currencyPending');
+  if (pending) pending.style.display = state.country ? 'none' : '';
+
+  // === Tier-aware visibility (Strategy phase only for Elevate/Legacy) ===
+  $$('.tier-only-strategy').forEach(el => {
+    if (!tier || !tier.hasStrategy) el.classList.add('hidden-row');
+    else el.classList.remove('hidden-row');
+  });
+
+  // === Renumber phase rows so they read 1, 2, 3, 4, 5 (not 1, 3, 4, 5, 6 when Strategy is hidden) ===
+  let n = 1;
+  document.querySelectorAll('#phaseTable tbody tr').forEach(row => {
+    if (row.classList.contains('hidden-row')) return;
+    const numCell = row.querySelector('[data-phase-num]');
+    if (numCell) numCell.textContent = String(n);
+    n++;
+  });
+
+  // === Update phase durations based on tier ===
+  if (tier) {
+    const phaseRows = document.querySelectorAll('#phaseTable tbody tr');
+    if (state.tier === 'start') {
+      // Start: 4 weeks total — Discovery W1, Visual W1-2, Design W2-3, Refinement W3, Delivery W4
+      const durations = ['Week 1', null, 'Week 1–2', 'Week 2–3', 'Week 3', 'Week 4'];
+      phaseRows.forEach((row, i) => {
+        if (row.classList.contains('hidden-row')) return;
+        const lastCell = row.cells[row.cells.length - 1];
+        if (durations[i] !== null && lastCell && !lastCell.querySelector('[data-bind]')) {
+          lastCell.textContent = durations[i];
+        }
+      });
+    } else if (state.tier === 'elevate') {
+      // Elevate: 6-8 weeks
+      const durations = ['Week 1', 'Week 1–2', 'Week 2–3', 'Week 3–5', 'Week 5–7', 'Week 7–8'];
+      phaseRows.forEach((row, i) => {
+        const lastCell = row.cells[row.cells.length - 1];
+        if (durations[i] && lastCell && !lastCell.querySelector('[data-bind]')) {
+          lastCell.textContent = durations[i];
+        }
+      });
+    } else if (state.tier === 'legacy') {
+      // Legacy: 10-12 weeks
+      const durations = ['Week 1', 'Week 1–2', 'Week 2–4', 'Week 4–8', 'Week 8–10', 'Week 10–12'];
+      phaseRows.forEach((row, i) => {
+        const lastCell = row.cells[row.cells.length - 1];
+        if (durations[i] && lastCell && !lastCell.querySelector('[data-bind]')) {
+          lastCell.textContent = durations[i];
+        }
+      });
+    }
+  }
+
+  // === Bound text values ===
+  const bind = (key, val) => $$('[data-bind="' + key + '"]').forEach(el => {
+    el.textContent = val;
+  });
+
+  bind('tierName', tier ? tier.title : 'the selected tier');
+  bind('tierPrice', tier ? fmtUSD(tier.priceUSD) : '[$ AMOUNT — once tier is selected]');
+  bind('tierDuration', tier ? tier.durationText : '3 to 12 weeks (depending on the selected tier)');
+  bind('tierRevisions', tier ? tier.revisions : '[X] revision rounds');
+  bind('deliveryWeek', tier ? tier.deliveryWeek : 'Week 8–12');
+
+  // Extra revision rate — country-dependent
+  if (state.country) {
+    bind('extraRevisionRate', local ? EXTRA_REVISION_NGN : EXTRA_REVISION_USD);
+  } else {
+    bind('extraRevisionRate', '$100 USD or ₦150,000 NGN per additional round (depends on Client country)');
+  }
+
+  // Start / End dates
+  bind('startDate', state.startDate ? fmtDate(state.startDate) : '[Start Date]');
+  if (tier && state.startDate) {
+    const end = calcEndDate(state.startDate, tier.durationWeeks);
+    bind('endDate', end);
+    $('#setupEndDate').value = end;
+  } else {
+    bind('endDate', '[Estimated Completion Date]');
+    $('#setupEndDate').value = '';
+  }
+
+  // === Tier checkbox visual state in Section 2.1 ===
+  $$('.tier-row[data-tier]').forEach(row => {
+    if (row.dataset.tier === state.tier) row.classList.add('selected');
+    else row.classList.remove('selected');
+  });
+
+  // Payment row
+  $$('.tier-row[data-payment]').forEach(row => {
+    if (row.dataset.payment === state.payment) row.classList.add('selected');
+    else row.classList.remove('selected');
+  });
+
+  // Portfolio delay row
+  $$('.tier-row[data-portfolio]').forEach(row => {
+    if (row.dataset.portfolio === state.portfolioDelay) row.classList.add('selected');
+    else row.classList.remove('selected');
+  });
+
+  // === Schedule A — highlight active tier, dim others ===
+  $$('.tier-schedule[data-tier-card]').forEach(card => {
+    card.classList.remove('active', 'dimmed');
+    if (state.tier) {
+      if (card.dataset.tierCard === state.tier) card.classList.add('active');
+      else card.classList.add('dimmed');
+    }
+  });
+
+  // === Sign summary ===
+  const setSummary = (key, value, hasValue) => {
+    const el = document.querySelector('[data-summary="' + key + '"]');
+    if (!el) return;
+    el.textContent = hasValue ? value : '—';
+    el.classList.toggle('empty', !hasValue);
+  };
+
+  setSummary('clientName', state.clientName, !!state.clientName);
+  setSummary('country', COUNTRY_LABELS[state.country] || '', !!state.country);
+  setSummary('tier', tier ? tier.title : '', !!tier);
+  setSummary('price', tier ? fmtUSD(tier.priceUSD) : '', !!tier);
+
+  if (tier && state.startDate) {
+    const end = calcEndDate(state.startDate, tier.durationWeeks);
+    setSummary('window', fmtDate(state.startDate) + ' → ' + end, true);
+  } else {
+    setSummary('window', '', false);
+  }
+
+  // === Enable / disable Sign button ===
+  const ready = state.country && state.tier && state.clientName && state.clientEmail && state.startDate;
+  const btn = $('#signBtn');
+  if (ready) {
+    btn.classList.remove('disabled');
+    btn.disabled = false;
+  } else {
+    btn.classList.add('disabled');
+    btn.disabled = true;
+  }
+}
+
+/* ============================================================
+   EVENT BINDINGS
+   ============================================================ */
+
+function bindEvents() {
+  // Setup card
+  $('#setupCountry').addEventListener('change', e => { state.country = e.target.value; update(); persist(); });
+  $('#setupTier').addEventListener('change', e => { state.tier = e.target.value; update(); persist(); });
+  $('#setupStartDate').addEventListener('change', e => { state.startDate = e.target.value; update(); persist(); });
+
+  // Section 1 — client info
+  $('#clientName').addEventListener('input', e => { state.clientName = e.target.value; update(); persist(); });
+  $('#clientAddress').addEventListener('input', e => { state.clientAddress = e.target.value; persist(); });
+  $('#clientEmail').addEventListener('input', e => { state.clientEmail = e.target.value; update(); persist(); });
+  $('#clientPhone').addEventListener('input', e => { state.clientPhone = e.target.value; persist(); });
+
+  // Section 2 — description
+  $('#projectDescription').addEventListener('input', e => { state.projectDescription = e.target.value; persist(); });
+
+  // Section 2.1 — tier rows (also sync with setup)
+  $$('.tier-row[data-tier]').forEach(row => {
+    row.addEventListener('click', () => {
+      state.tier = row.dataset.tier;
+      $('#setupTier').value = state.tier;
+      update();
+      persist();
+    });
+  });
+
+  // Section 4 — payment rows
+  $$('.tier-row[data-payment]').forEach(row => {
+    row.addEventListener('click', () => {
+      state.payment = row.dataset.payment;
+      update();
+      persist();
+    });
+  });
+
+  // Schedule B fields
+  $('#projectName').addEventListener('input', e => { state.projectName = e.target.value; persist(); });
+  $('#projectBrief').addEventListener('input', e => { state.projectBrief = e.target.value; persist(); });
+  $('#industry').addEventListener('input', e => { state.industry = e.target.value; persist(); });
+  $('#customVariations').addEventListener('input', e => { state.customVariations = e.target.value; persist(); });
+  $('#specialTerms').addEventListener('input', e => { state.specialTerms = e.target.value; persist(); });
+
+  // Portfolio delay rows
+  $$('.tier-row[data-portfolio]').forEach(row => {
+    row.addEventListener('click', () => {
+      state.portfolioDelay = row.dataset.portfolio;
+      update();
+      persist();
+    });
+  });
+
+  // Mobile toggle
+  $('#mobileToggle').addEventListener('click', () => {
+    $('#sidebar').classList.toggle('open');
+    $('#backdrop').classList.toggle('show');
+  });
+  $('#backdrop').addEventListener('click', () => {
+    $('#sidebar').classList.remove('open');
+    $('#backdrop').classList.remove('show');
+  });
+  $$('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1100) {
+        $('#sidebar').classList.remove('open');
+        $('#backdrop').classList.remove('show');
+      }
+    });
+  });
+
+  // Reading progress
+  const progress = $('#progress');
+  window.addEventListener('scroll', () => {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100));
+    progress.style.width = pct + '%';
+  });
+
+  // Active section highlighting
+  const sections = $$('section[id], .promise');
+  const navLinks = $$('.sidebar-nav a');
+  const setActive = () => {
+    const scrollPos = window.scrollY + 100;
+    let activeId = null;
+    sections.forEach(s => {
+      if (s.offsetTop <= scrollPos) activeId = s.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + activeId);
+    });
+  };
+  window.addEventListener('scroll', setActive);
+  setActive();
+
+  // Sign button
+  $('#signBtn').addEventListener('click', handleSign);
+
+  // Download button
+  $('#downloadBtn').addEventListener('click', e => {
+    e.preventDefault();
+    window.open('./pdf/AWESOME_Brand_Design_Agreement.pdf', '_blank');
+  });
+}
+
+/* ============================================================
+   PERSISTENCE — save form state to localStorage so a client
+   can refresh without losing their place
+   ============================================================ */
+
+function persist() {
+  try {
+    localStorage.setItem('awesome-contract-state', JSON.stringify(state));
+  } catch (e) { /* private mode etc. */ }
+}
+
+function restore() {
+  try {
+    const raw = localStorage.getItem('awesome-contract-state');
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    Object.assign(state, saved);
+
+    // Reflect in form fields
+    if (state.country) $('#setupCountry').value = state.country;
+    if (state.tier) $('#setupTier').value = state.tier;
+    if (state.startDate) $('#setupStartDate').value = state.startDate;
+    if (state.clientName) $('#clientName').value = state.clientName;
+    if (state.clientAddress) $('#clientAddress').value = state.clientAddress;
+    if (state.clientEmail) $('#clientEmail').value = state.clientEmail;
+    if (state.clientPhone) $('#clientPhone').value = state.clientPhone;
+    if (state.projectDescription) $('#projectDescription').value = state.projectDescription;
+    if (state.projectName) $('#projectName').value = state.projectName;
+    if (state.projectBrief) $('#projectBrief').value = state.projectBrief;
+    if (state.industry) $('#industry').value = state.industry;
+    if (state.customVariations) $('#customVariations').value = state.customVariations;
+    if (state.specialTerms) $('#specialTerms').value = state.specialTerms;
+  } catch (e) { /* ignore */ }
+}
+
+/* ============================================================
+   DROPBOX SIGN INTEGRATION
+
+   Flow:
+   1. Client fills in form + clicks "Sign with Dropbox Sign"
+   2. POST to /api/sign with form data
+   3. Server uses Dropbox Sign API key (env var) to create
+      an embedded signature request, returns sign_url
+   4. Client opens HelloSign embedded modal with sign_url
+   5. Client signs in modal — Dropbox Sign emails both parties
+   ============================================================ */
+
+const setStatus = (msg, type = '') => {
+  const el = $('#signStatus');
+  el.textContent = msg;
+  el.className = 'sign-status ' + type;
+};
+
+async function handleSign() {
+  setStatus('Preparing your contract for signature…', 'loading');
+
+  // First, save the submitted state to our backend (for tracking)
+  try {
+    await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...state,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      })
+    });
+  } catch (e) { console.warn('Submit log failed', e); }
+
+  // Then create the Dropbox Sign signature request
+  let signUrl;
+  try {
+    const tier = TIER_CONFIG[state.tier];
+    const payload = {
+      // Designer-side (signer 1)
+      designerEmail: 'hello@awesomebydesign.studio',
+      designerName: 'Kehinde Awe',
+
+      // Client-side (signer 2)
+      clientEmail: state.clientEmail,
+      clientName: state.clientName,
+
+      // Contract metadata
+      title: `AWESOME × ${state.clientName} — Brand Design Agreement`,
+      subject: `Brand Design Agreement — ${tier.name}`,
+      message: `Please review and sign this Brand Design Agreement for the ${tier.name} engagement.`,
+
+      // Form data captured before signing
+      formData: { ...state },
+      tierConfig: tier,
+
+      // Embedded mode flag
+      testMode: TEST_MODE,
+      clientId: DROPBOX_SIGN_CLIENT_ID
+    };
+
+    const res = await fetch('/api/sign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `Server returned ${res.status}`);
+    }
+
+    const data = await res.json();
+    signUrl = data.signUrl;
+    if (!signUrl) throw new Error('No sign URL returned from server.');
+  } catch (err) {
+    console.error('Sign request error:', err);
+    setStatus(
+      'Could not create signature request. ' +
+      'Make sure the /api/sign endpoint is deployed and the DROPBOX_SIGN_API_KEY environment variable is set on Vercel. ' +
+      '(Error: ' + err.message + ')',
+      'error'
+    );
+    return;
+  }
+
+  // Open the Dropbox Sign embedded modal
+  if (typeof HelloSign !== 'undefined') {
+    const client = new HelloSign({
+      clientId: DROPBOX_SIGN_CLIENT_ID,
+      skipDomainVerification: TEST_MODE
+    });
+
+    client.open(signUrl);
+
+    client.on('sign', () => {
+      setStatus('✓ Contract signed. Both parties will receive the completed PDF by email.', 'success');
+    });
+    client.on('cancel', () => {
+      setStatus('Signing cancelled. Click the button again when you\'re ready.', '');
+    });
+    client.on('error', (err) => {
+      setStatus('There was an issue with the signature widget. Please try again or contact hello@awesomebydesign.studio. (Error: ' + (err.code || 'unknown') + ')', 'error');
+    });
+  } else {
+    setStatus('The signing widget did not load. Please try again or contact hello@awesomebydesign.studio.', 'error');
+  }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadLogo();
+  loadWaxSeal();
+  bindEvents();
+  restore();
+  update();
+});
+</script>
+
+</body>
+</html>

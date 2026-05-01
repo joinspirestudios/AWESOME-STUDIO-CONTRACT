@@ -1,0 +1,14 @@
+{
+  "name": "awesome-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "THE AWESOME DESIGN STUDIO LTD — Brand Design Agreement (interactive web contract)",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "license": "UNLICENSED"
+}

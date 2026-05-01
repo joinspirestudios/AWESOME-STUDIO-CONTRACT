@@ -2,15 +2,18 @@
 // /api/sign.js — Dropbox Sign integration
 //
 // Creates a signature request via Dropbox Sign API.
-// Two modes supported:
 //
+// v4 CHANGE: The document being signed is now generated dynamically
+// from the client's filled-in form state (via /lib/render-contract-pdf.js)
+// instead of being read from the static pdf/ folder. The static PDF
+// is kept as a logged fallback only — if it ever fires, that's a
+// [CRITICAL] error worth investigating.
+//
+// Two modes supported:
 //   1. EMBEDDED MODE — opens signing modal in-page
 //      (requires Premium plan + Embedded App with client_id)
-//
 //   2. EMAIL MODE — sends signing emails to both parties
 //      (works on any Dropbox Sign plan, simpler setup)
-//
-// Set MODE below to choose.
 //
 // Required environment variables (set in Vercel dashboard):
 //   DROPBOX_SIGN_API_KEY — your API key from Dropbox Sign
@@ -19,21 +22,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const { renderContractPDF } = require('../lib/render-contract-pdf');
 
-// Toggle: 'embedded' or 'email'
 const MODE = process.env.DROPBOX_SIGN_MODE || 'email';
-
-// API key — should be set as a Vercel env var. The fallback below was previously
-// the same value as CLIENT_ID, which is incorrect (these are different in Dropbox Sign).
-// Leaving the fallback empty so missing env vars surface a clear error instead of
-// silently failing the API call.
 const API_KEY = process.env.DROPBOX_SIGN_API_KEY || '';
-
 const CLIENT_ID = process.env.DROPBOX_SIGN_CLIENT_ID ||
                   '4de7afdc22788c66ca6604f466e51f846cafbfe66cbcddfacd72fbef92db0b29';
-
-const TEST_MODE = process.env.DROPBOX_SIGN_TEST_MODE !== 'false'; // default: test mode on
-
+const TEST_MODE = process.env.DROPBOX_SIGN_TEST_MODE !== 'false';
 const HS_BASE = 'https://api.hellosign.com/v3';
 
 // ============================================================
@@ -48,7 +43,6 @@ function escapeFormVal(val) {
   return String(val == null ? '' : val);
 }
 
-// Build multipart/form-data manually so we can attach the PDF
 function buildMultipart(fields, files, boundary) {
   const chunks = [];
   const CRLF = '\r\n';
@@ -72,24 +66,75 @@ function buildMultipart(fields, files, boundary) {
 }
 
 // ============================================================
+// PDF resolution: dynamic render first, static fallback (with loud log)
+// ============================================================
+
+async function resolvePdfBuffer(formData) {
+  // Try dynamic render first
+  try {
+    const startedAt = Date.now();
+    const buf = await renderContractPDF(formData);
+    const elapsedMs = Date.now() - startedAt;
+    console.log(
+      `[sign] Dynamic PDF rendered: ${buf.length} bytes in ${elapsedMs}ms ` +
+      `(client="${formData.clientName || 'unknown'}" tier="${formData.tier || 'unknown'}")`
+    );
+    return { buffer: buf, source: 'dynamic' };
+  } catch (err) {
+    // CRITICAL: dynamic render failed. Fall back to static PDF so the
+    // sign flow doesn't break, but log loudly so this gets noticed.
+    console.error(
+      '[CRITICAL] Dynamic PDF render failed, falling back to static PDF. ' +
+      'This means the client will receive a BLANK template instead of their ' +
+      'filled contract. Investigate immediately. Error:',
+      err
+    );
+  }
+
+  // Static PDF fallback
+  const candidates = [
+    path.join(process.cwd(), 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
+    path.join(__dirname, '..', 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
+    path.join('/var/task', 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
+    path.join(__dirname, 'pdf', 'AWESOME_Brand_Design_Agreement.pdf')
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate)) {
+        const buf = fs.readFileSync(candidate);
+        console.error(
+          '[CRITICAL] Sending STATIC fallback PDF to Dropbox Sign — ' +
+          'client will not see their filled-in data in the signed contract.'
+        );
+        return { buffer: buf, source: 'static-fallback', path: candidate };
+      }
+    } catch (e) { /* try next */ }
+  }
+
+  // Total failure — neither dynamic nor static worked
+  const error = new Error(
+    'Unable to obtain a contract PDF: dynamic render failed AND static fallback file not found. ' +
+    'Tried: ' + candidates.join(', ')
+  );
+  error.triedPaths = candidates;
+  throw error;
+}
+
+// ============================================================
 // Main handler
 // ============================================================
 
 module.exports = async (req, res) => {
-  // CORS for safety
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Upfront validation — if no API key is set, return a clear error
   if (!API_KEY) {
     console.error('DROPBOX_SIGN_API_KEY env var not set on Vercel');
     return res.status(500).json({
@@ -117,46 +162,31 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Read the PDF from /pdf folder
-    // On Vercel, serverless functions resolve relative paths from the function's own directory.
-    // We try multiple candidate paths so this works locally AND in production.
-    const candidates = [
-      path.join(process.cwd(), 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
-      path.join(__dirname, '..', 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
-      path.join('/var/task', 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
-      path.join(__dirname, 'pdf', 'AWESOME_Brand_Design_Agreement.pdf')
-    ];
-    let pdfBuffer;
-    let pdfPath;
-    for (const candidate of candidates) {
-      try {
-        if (fs.existsSync(candidate)) {
-          pdfBuffer = fs.readFileSync(candidate);
-          pdfPath = candidate;
-          break;
-        }
-      } catch (e) { /* try next */ }
-    }
-    if (!pdfBuffer) {
-      console.error('Contract PDF not found. Tried paths:', candidates);
+    // Resolve the PDF — dynamic render first, static fallback if it fails
+    let pdfBuffer, pdfSource;
+    try {
+      const result = await resolvePdfBuffer(formData);
+      pdfBuffer = result.buffer;
+      pdfSource = result.source;
+    } catch (pdfErr) {
+      console.error('[sign] PDF resolution failed entirely:', pdfErr);
       return res.status(500).json({
-        error: 'Contract PDF not found on server.',
-        hint: 'Make sure pdf/AWESOME_Brand_Design_Agreement.pdf is committed and that vercel.json includes it via functions[].includeFiles.',
-        triedPaths: candidates
+        error: 'Could not produce a contract PDF for signing.',
+        hint: 'Both dynamic rendering and static fallback failed. ' +
+              'Check Vercel function logs and ensure pdf/AWESOME_Brand_Design_Agreement.pdf is committed.',
+        triedPaths: pdfErr.triedPaths
       });
     }
 
     const boundary = '----awesome' + Math.random().toString(36).substring(2);
     const endpoint = MODE === 'embedded' ? '/signature_request/create_embedded' : '/signature_request/send';
 
-    // Build form fields for Dropbox Sign API
     const fields = {
       'title': title,
       'subject': subject,
       'message': message,
       'test_mode': TEST_MODE ? '1' : '0',
 
-      // Two signers — designer first, client second
       'signers[0][email_address]': designerEmail,
       'signers[0][name]': designerName,
       'signers[0][order]': '0',
@@ -165,15 +195,14 @@ module.exports = async (req, res) => {
       'signers[1][name]': clientName,
       'signers[1][order]': '1',
 
-      // Metadata for tracking
       'metadata[client_email]': clientEmail,
       'metadata[tier]': formData.tier || '',
       'metadata[country]': formData.country || '',
       'metadata[start_date]': formData.startDate || '',
-      'metadata[project_name]': formData.projectName || ''
+      'metadata[project_name]': formData.projectName || '',
+      'metadata[pdf_source]': pdfSource
     };
 
-    // Embedded mode requires client_id
     if (MODE === 'embedded') {
       fields['client_id'] = CLIENT_ID;
     }
@@ -189,7 +218,6 @@ module.exports = async (req, res) => {
       boundary
     );
 
-    // Send to Dropbox Sign
     const dsRes = await fetch(HS_BASE + endpoint, {
       method: 'POST',
       headers: {
@@ -215,7 +243,6 @@ module.exports = async (req, res) => {
     const sigRequest = dsData.signature_request;
 
     if (MODE === 'embedded') {
-      // Get the embedded sign URL for the client (signer index 1)
       const clientSig = sigRequest.signatures.find(s => s.signer_email_address === clientEmail);
       if (!clientSig) {
         return res.status(500).json({ error: 'Could not locate client signature record.' });
@@ -237,14 +264,15 @@ module.exports = async (req, res) => {
       return res.status(200).json({
         mode: 'embedded',
         signUrl: urlData.embedded.sign_url,
-        signatureRequestId: sigRequest.signature_request_id
+        signatureRequestId: sigRequest.signature_request_id,
+        pdfSource: pdfSource
       });
     } else {
-      // Email mode — both parties get email links
       return res.status(200).json({
         mode: 'email',
         emailsSent: true,
         signatureRequestId: sigRequest.signature_request_id,
+        pdfSource: pdfSource,
         message: `Signature request emails sent to ${designerEmail} and ${clientEmail}.`
       });
     }

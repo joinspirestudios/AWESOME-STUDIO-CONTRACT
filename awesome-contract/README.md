@@ -95,6 +95,10 @@ The contract reflects choices in real time:
 - **Country selector** → Local (Nigeria) clients see NGN payment terms + Lagos courts. International clients see USD + arbitration. Currency, payment methods, and dispute clauses all swap accordingly.
 - **Tier selector** → Phase Structure table hides Strategy row for AWESOME START. Schedule A highlights the chosen tier and dims the others. Pricing, revisions, and durations adjust everywhere they appear.
 - **Start date picker** → Auto-calculates estimated completion based on the tier's duration (4 / 8 / 12 weeks).
+- **Client name field** → Once filled, "For [Name]" appears under the Promise note, "Prepared for [Name]" appears in the Sign block, and the Section 1 alias paragraph swaps in the legal name. Formal "the Client" references inside legal clauses stay generic on purpose (legal clarity).
+- **Project Brief** → Section 2.4 and Schedule B's Project Brief Summary are bidirectionally synced — typing in one fills the other.
+- **Payment structure** → Selecting "Custom split" reveals a textarea so the client can write the structure they've agreed on.
+- **Download PDF button** → Triggers the browser's native print-to-PDF with the form values frozen in place, so the downloaded PDF reflects exactly what the client filled in (not the blank original).
 
 State is persisted to `localStorage` so a client can refresh without losing progress.
 

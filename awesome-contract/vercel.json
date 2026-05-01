@@ -29,7 +29,10 @@
     }
   ],
   "functions": {
-    "api/sign.js": { "maxDuration": 30 },
+    "api/sign.js": {
+      "maxDuration": 30,
+      "includeFiles": "pdf/**"
+    },
     "api/submit.js": { "maxDuration": 10 }
   }
 }

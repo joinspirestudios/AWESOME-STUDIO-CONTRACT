@@ -279,7 +279,7 @@ body {
 
 .sidebar-nav .num {
   font-family: var(--serif);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 14px;
   color: var(--stop);
   flex-shrink: 0;
@@ -367,7 +367,7 @@ body {
 }
 
 .hero-title .light {
-  font-weight: 200;
+  font-weight: 400;
   color: var(--stop);
 }
 
@@ -421,7 +421,7 @@ body {
 }
 
 .promise-headline .light {
-  font-weight: 200;
+  font-weight: 400;
 }
 
 .promise-rule {
@@ -449,7 +449,7 @@ body {
 .promise-signature-name {
   font-family: var(--serif);
   font-size: 22px;
-  font-weight: 200;
+  font-weight: 400;
   color: var(--maroon);
 }
 
@@ -460,6 +460,39 @@ body {
   text-transform: uppercase;
   color: rgba(40, 0, 0, 0.55);
   margin-top: 6px;
+}
+
+/* Personalized dedication line shown once Client Name is filled */
+.promise-dedication {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(40, 0, 0, 0.7);
+  margin-bottom: 18px;
+  letter-spacing: 0.005em;
+}
+
+.promise-dedication strong {
+  font-weight: 400;
+  font-style: normal;
+  color: var(--stop);
+}
+
+.sign-prepared-for {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(237, 231, 221, 0.75);
+  margin-bottom: 22px;
+  letter-spacing: 0.005em;
+}
+
+.sign-prepared-for strong {
+  font-weight: 400;
+  font-style: normal;
+  color: var(--texture);
 }
 
 /* ==========================================================
@@ -570,7 +603,7 @@ body {
 }
 
 .section-title .light {
-  font-weight: 200;
+  font-weight: 400;
   color: var(--stop);
 }
 
@@ -932,7 +965,7 @@ body {
 }
 
 .tier-schedule-name .light {
-  font-weight: 200;
+  font-weight: 400;
   color: var(--stop);
 }
 
@@ -949,7 +982,7 @@ body {
 .tier-schedule-tagline {
   font-family: var(--serif);
   font-size: 17px;
-  font-weight: 200;
+  font-weight: 400;
   color: rgba(40, 0, 0, 0.78);
   line-height: 1.5;
   margin-bottom: 22px;
@@ -1016,14 +1049,14 @@ body {
 }
 
 .sign-headline .light {
-  font-weight: 200;
+  font-weight: 400;
   color: var(--stop);
 }
 
 .sign-confirmation {
   font-family: var(--serif);
   font-size: 18px;
-  font-weight: 200;
+  font-weight: 400;
   line-height: 1.6;
   color: rgba(237, 231, 221, 0.9);
   margin: 0 auto 40px;
@@ -1175,7 +1208,7 @@ body {
 .sign-tagline {
   font-family: var(--serif);
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 400;
   color: rgba(237, 231, 221, 0.6);
   margin-bottom: 24px;
 }
@@ -1302,12 +1335,38 @@ body {
   /* Default visible — hidden via JS based on state */
 }
 
-/* Print preserves color */
+/* Print preserves color and styles the filled PDF cleanly */
 @media print {
-  body { background: #fff; }
-  .topbar, .sidebar, .sign-cta-block { display: none; }
+  body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .topbar, .sidebar, .sign-cta-block, .backdrop, .topbar-progress { display: none !important; }
   .shell { grid-template-columns: 1fr; padding-top: 0; }
   .main { padding: 0; }
+  .content { max-width: 100%; }
+  .hero, .sign-section { page-break-inside: avoid; }
+  .section { page-break-inside: auto; }
+  .section h2, .promise-headline, .section-title, .sign-headline { page-break-after: avoid; }
+
+  /* Never break inside critical blocks */
+  .parties-block, .layer-block, .callout, .tier-schedule { page-break-inside: avoid; }
+
+  /* Hide rows the user didn't select (only when triggered via Download PDF) */
+  .print-hide { display: none !important; }
+
+  /* The setup card still useful in PDF — show selected values, not the input UI */
+  .setup-card-desc { display: none; }
+
+  /* Hide instructional notes that don't belong in the signed contract */
+  .setup-card-desc, [data-print-hide] { display: none; }
+
+  /* Frozen input replacements look clean */
+  .frozen-value { background: transparent !important; padding: 4px 0 !important; border-bottom: 1px solid rgba(40,0,0,0.2) !important; border-radius: 0 !important; }
+
+  /* Sign block stays but hide the disabled CTA buttons */
+  .sign-cta-block, .sign-status, .sign-fineprint { display: none; }
+
+  /* Footer */
+  .footer { background: transparent !important; color: rgba(40,0,0,0.6) !important; }
+  .footer-inner { padding: 12px 0 !important; }
 }
 </style>
 </head>
@@ -1397,6 +1456,7 @@ body {
       <!-- PROMISE (now neutral, no red) -->
       <section class="promise" id="promise">
         <div class="promise-eyebrow">A Note Before The Terms</div>
+        <div class="promise-dedication" id="promiseDedication" style="display:none;">For <strong data-bind="clientNameRef"></strong></div>
         <h2 class="promise-headline">The <span class="light">Promise</span></h2>
         <div class="promise-rule"></div>
         <p class="promise-body">This is not a wall. It is a foundation.</p>
@@ -1492,7 +1552,7 @@ body {
           </div>
         </div>
 
-        <p>Throughout this agreement, the company above is referred to as <strong>&ldquo;the Design Studio&rdquo;</strong> and the company that has commissioned the work is referred to as <strong>&ldquo;the Client.&rdquo;</strong> Together, the two are referred to as <strong>&ldquo;the Parties.&rdquo;</strong></p>
+        <p>Throughout this agreement, <strong>THE AWESOME DESIGN STUDIO LTD</strong> is referred to as <strong>&ldquo;the Design Studio,&rdquo;</strong> and <strong data-bind="clientNameRef">[the company that has commissioned the work]</strong> is referred to as <strong>&ldquo;the Client.&rdquo;</strong> Together, the two are referred to as <strong>&ldquo;the Parties.&rdquo;</strong></p>
       </section>
 
       <!-- ============= SECTION 2 — The Work ============= -->
@@ -1531,7 +1591,8 @@ body {
         <h2>2.4 &nbsp; Project Description</h2>
         <div class="callout">
           <div class="callout-title">A short description of this project</div>
-          <textarea class="field-textarea" id="projectDescription" placeholder="Describe the brand, the industry, and any specific brand context the Design Studio should know about..." rows="3"></textarea>
+          <textarea class="field-textarea" data-sync="projectBrief" placeholder="Describe the brand, the industry, and any specific brand context the Design Studio should know about..." rows="3"></textarea>
+          <div style="font-family: var(--sans); font-size: 11px; color: rgba(40, 0, 0, 0.5); margin-top: 6px; letter-spacing: 0.04em;">This field is shared with Schedule B &mdash; Project Brief Summary. Filling either one fills both.</div>
         </div>
       </section>
 
@@ -1587,6 +1648,11 @@ body {
           <div class="tier-row" data-payment="A"><span class="tier-checkbox"></span><span class="tier-name">Option A &mdash; 75 / 25</span></div>
           <div class="tier-row" data-payment="B"><span class="tier-checkbox"></span><span class="tier-name">Option B &mdash; 50 / 50</span></div>
           <div class="tier-row" data-payment="C"><span class="tier-checkbox"></span><span class="tier-name">Custom split as agreed in writing</span></div>
+        </div>
+        <div class="callout custom-split-block" id="customSplitBlock" style="display:none;">
+          <div class="callout-title">Describe Your Custom Payment Structure</div>
+          <textarea class="field-textarea" id="customSplitDetails" placeholder="e.g. 30% on signing, 30% at Visual Direction approval, 40% on final delivery. Or whatever structure you and the Design Studio have agreed on in writing." rows="3"></textarea>
+          <div style="font-family: var(--sans); font-size: 11px; color: rgba(40, 0, 0, 0.5); margin-top: 6px; letter-spacing: 0.04em;">This custom structure must be agreed in writing by both Parties before work begins.</div>
         </div>
 
         <h2>4.4 &nbsp; Currency</h2>
@@ -1750,7 +1816,7 @@ body {
         <p>If the Client's project involves a sensitive launch (a new product, rebrand, funding announcement, or other time-sensitive moment), the Client may request a <strong>portfolio publication delay of up to six (6) months</strong> from project completion. This request must be made in writing before project kickoff and noted in Schedule B.</p>
 
         <h2>9.7 &nbsp; Credit Attribution</h2>
-        <p>Credit attribution is appreciated but not required. When the Client publicly shares the brand assets created under this contract, they are encouraged to credit the Design Studio as <strong>&ldquo;Designed by AWESOME&rdquo;</strong> or by tagging <strong>@awesomebydesign</strong> on social media. This credit is a courtesy, not a contractual obligation.</p>
+        <p>Credit attribution is appreciated but not required. When the Client publicly shares the brand assets created under this contract, they are encouraged to credit the Design Studio as <strong>&ldquo;Designed by AWESOME&rdquo;</strong> or by tagging <strong><a href="http://awesomebydesign.studio" target="_blank" rel="noopener">@awesomebydesign.studio</a></strong> on social media. This credit is a courtesy, not a contractual obligation.</p>
 
         <h2>9.8 &nbsp; Third-Party License Compliance</h2>
         <p>For any third-party assets used in the final deliverables (fonts, stock images, icons, plugins), the Client is responsible for maintaining the necessary licenses going forward. The Design Studio will provide a list of all third-party assets used and their licensing terms upon delivery.</p>
@@ -2053,7 +2119,7 @@ body {
 
         <div class="callout">
           <div class="callout-title">Project Brief Summary</div>
-          <textarea class="field-textarea" id="projectBrief" placeholder="A short summary of the brief — what's the brand, who's it for, what does success look like?" rows="4"></textarea>
+          <textarea class="field-textarea" data-sync="projectBrief" placeholder="A short summary of the brief — what's the brand, who's it for, what does success look like?" rows="4"></textarea>
         </div>
 
         <div class="callout">
@@ -2090,6 +2156,7 @@ body {
       <section class="sign-section" id="sign">
         <div class="sign-content">
           <div class="sign-eyebrow">Section 18 &nbsp;·&nbsp; Acceptance</div>
+          <div class="sign-prepared-for" id="signPreparedFor" style="display:none;">Prepared for <strong data-bind="clientNameRef"></strong></div>
           <h2 class="sign-headline">Sign &amp; Build<br>Something <span class="light">Awesome</span></h2>
           <p class="sign-confirmation">By signing this contract through Dropbox Sign, both Parties confirm they have read this contract in full, understand its terms, and have the authority to enter into this agreement on behalf of the Party they represent.</p>
 
@@ -2186,11 +2253,12 @@ const state = {
   clientEmail: '',
   clientPhone: '',
 
-  // Section 2 — Project description
-  projectDescription: '',
+  // Section 2 — Project description (now merged with Schedule B's projectBrief)
+  // — see projectBrief below
 
   // Section 4 — Payment selection
   payment: '',
+  customSplitDetails: '',
 
   // Schedule B
   projectName: '',
@@ -2322,16 +2390,38 @@ async function loadWaxSeal() {
           font-weight="600" text-anchor="middle" fill="#3d2710">aw<tspan font-style="italic">ę</tspan>.</text>
   </svg>`;
 
-  try {
-    const res = await fetch('./assets/seal/awesome-seal.svg');
-    if (res.ok) {
-      $('#waxSeal').innerHTML = await res.text();
-    } else {
-      $('#waxSeal').innerHTML = inlineSeal;
-    }
-  } catch (err) {
-    $('#waxSeal').innerHTML = inlineSeal;
+  // Try a chain of candidate files — Joseph can drop in any of these names/formats
+  const candidates = [
+    './assets/seal/awesome-seal.svg',
+    './assets/seal/awesome-seal.png',
+    './assets/seal/awesome-seal.jpg',
+    './assets/seal/awesome-seal.webp',
+    './assets/seal/custom-seal.svg',
+    './assets/seal/custom-seal.png'
+  ];
+
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url, { method: 'GET' });
+      if (!res.ok) continue;
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+
+      if (ct.includes('svg') || url.endsWith('.svg')) {
+        const txt = await res.text();
+        // Sanity check: must actually contain <svg
+        if (txt.includes('<svg')) {
+          $('#waxSeal').innerHTML = txt;
+          return;
+        }
+      } else if (ct.startsWith('image/') || /\.(png|jpe?g|webp)$/i.test(url)) {
+        $('#waxSeal').innerHTML = `<img src="${url}" alt="Awesome seal" style="width:100%;height:100%;object-fit:contain;display:block;">`;
+        return;
+      }
+    } catch (err) { /* try next */ }
   }
+
+  // Final fallback: inline SVG seal
+  $('#waxSeal').innerHTML = inlineSeal;
 }
 
 /* ============================================================
@@ -2436,6 +2526,24 @@ function update() {
   bind('tierRevisions', tier ? tier.revisions : '[X] revision rounds');
   bind('deliveryWeek', tier ? tier.deliveryWeek : 'Week 8–12');
 
+  // === Client name binding (used in Section 1, Promise dedication, Sign block) ===
+  const nameForDisplay = state.clientName.trim();
+  bind('clientNameRef', nameForDisplay || '[the company that has commissioned the work]');
+
+  // Toggle "For [Client Name]" line on Promise section
+  const promiseDed = document.getElementById('promiseDedication');
+  if (promiseDed) promiseDed.style.display = nameForDisplay ? '' : 'none';
+
+  // Toggle "Prepared for [Client Name]" line on Sign block
+  const signPrep = document.getElementById('signPreparedFor');
+  if (signPrep) signPrep.style.display = nameForDisplay ? '' : 'none';
+
+  // === Custom payment split textarea visibility ===
+  const customSplitBlock = document.getElementById('customSplitBlock');
+  if (customSplitBlock) {
+    customSplitBlock.style.display = (state.payment === 'C') ? '' : 'none';
+  }
+
   // Extra revision rate — country-dependent
   if (state.country) {
     bind('extraRevisionRate', local ? EXTRA_REVISION_NGN : EXTRA_REVISION_USD);
@@ -2529,8 +2637,18 @@ function bindEvents() {
   $('#clientEmail').addEventListener('input', e => { state.clientEmail = e.target.value; update(); persist(); });
   $('#clientPhone').addEventListener('input', e => { state.clientPhone = e.target.value; persist(); });
 
-  // Section 2 — description
-  $('#projectDescription').addEventListener('input', e => { state.projectDescription = e.target.value; persist(); });
+  // Section 2 — description (bidirectional sync with Schedule B Project Brief Summary)
+  // Both textareas share data-sync="projectBrief" — typing in one updates the other.
+  $$('textarea[data-sync="projectBrief"]').forEach(ta => {
+    ta.addEventListener('input', e => {
+      state.projectBrief = e.target.value;
+      // Mirror to all other textareas with the same data-sync
+      $$('textarea[data-sync="projectBrief"]').forEach(other => {
+        if (other !== e.target) other.value = e.target.value;
+      });
+      persist();
+    });
+  });
 
   // Section 2.1 — tier rows (also sync with setup)
   $$('.tier-row[data-tier]').forEach(row => {
@@ -2553,10 +2671,16 @@ function bindEvents() {
 
   // Schedule B fields
   $('#projectName').addEventListener('input', e => { state.projectName = e.target.value; persist(); });
-  $('#projectBrief').addEventListener('input', e => { state.projectBrief = e.target.value; persist(); });
+  // (projectBrief is handled via data-sync above — both Section 2.4 and Schedule B share it)
   $('#industry').addEventListener('input', e => { state.industry = e.target.value; persist(); });
   $('#customVariations').addEventListener('input', e => { state.customVariations = e.target.value; persist(); });
   $('#specialTerms').addEventListener('input', e => { state.specialTerms = e.target.value; persist(); });
+
+  // Section 4 — custom split textarea
+  const customSplitInput = document.getElementById('customSplitDetails');
+  if (customSplitInput) {
+    customSplitInput.addEventListener('input', e => { state.customSplitDetails = e.target.value; persist(); });
+  }
 
   // Portfolio delay rows
   $$('.tier-row[data-portfolio]').forEach(row => {
@@ -2612,11 +2736,104 @@ function bindEvents() {
   // Sign button
   $('#signBtn').addEventListener('click', handleSign);
 
-  // Download button
+  // Download button — generates a filled-out PDF using the browser's native print-to-PDF
   $('#downloadBtn').addEventListener('click', e => {
     e.preventDefault();
-    window.open('./pdf/AWESOME_Brand_Design_Agreement.pdf', '_blank');
+    downloadFilledPDF();
   });
+}
+
+/* ============================================================
+   DOWNLOAD FILLED PDF
+   Uses window.print() with a pre-process step that swaps form
+   inputs for static spans (so values render in the printed PDF).
+   ============================================================ */
+
+function downloadFilledPDF() {
+  // Build readable map of selected values (for selects + payment + portfolio)
+  const tier = state.tier ? TIER_CONFIG[state.tier] : null;
+  const countryLabel = state.country ? (COUNTRY_LABELS[state.country] || state.country) : '';
+  const tierLabel = tier ? `${tier.title} — ${fmtUSD(tier.priceUSD)}` : '';
+  const startLabel = state.startDate ? fmtDate(state.startDate) : '';
+  const endLabel = (tier && state.startDate) ? calcEndDate(state.startDate, tier.durationWeeks) : '';
+  const paymentLabel = ({ A: 'Option A — 75 / 25', B: 'Option B — 50 / 50', C: 'Custom split as agreed in writing' }[state.payment]) || '';
+  const portfolioLabel = state.portfolioDelay === 'yes'
+    ? 'Yes — delay portfolio publishing for up to 6 months after delivery'
+    : (state.portfolioDelay === 'no' ? 'No — portfolio rights activate on delivery' : '');
+
+  // Snapshot of fields to freeze: { selector, value, blockEl (optional) }
+  const freezeMap = [
+    { sel: '#clientName', value: state.clientName },
+    { sel: '#clientAddress', value: state.clientAddress },
+    { sel: '#clientEmail', value: state.clientEmail },
+    { sel: '#clientPhone', value: state.clientPhone },
+    { sel: '#projectName', value: state.projectName },
+    { sel: '#industry', value: state.industry },
+    { sel: '#customVariations', value: state.customVariations },
+    { sel: '#specialTerms', value: state.specialTerms },
+    { sel: '#customSplitDetails', value: state.customSplitDetails },
+    { sel: '#setupCountry', value: countryLabel, isSelect: true },
+    { sel: '#setupTier', value: tierLabel, isSelect: true },
+    { sel: '#setupStartDate', value: startLabel },
+    { sel: '#setupEndDate', value: endLabel }
+  ];
+
+  // Both shared projectBrief textareas
+  document.querySelectorAll('textarea[data-sync="projectBrief"]').forEach(ta => {
+    freezeMap.push({ el: ta, value: state.projectBrief });
+  });
+
+  const restorers = [];
+
+  // Freeze inputs/selects/textareas → static spans
+  freezeMap.forEach(item => {
+    const el = item.el || document.querySelector(item.sel);
+    if (!el) return;
+    const span = document.createElement('span');
+    span.className = 'frozen-value' + (el.tagName === 'TEXTAREA' ? ' frozen-textarea' : '');
+    span.textContent = item.value || '—';
+    span.style.cssText = 'display: inline-block; padding: 8px 12px; font-family: var(--sans); font-size: 14px; color: var(--maroon); background: rgba(40,0,0,0.04); border-radius: 4px; min-height: 1.5em; width: ' + (el.classList.contains('large') ? 'auto' : '100%') + '; box-sizing: border-box; white-space: pre-wrap;';
+    if (el.classList.contains('large')) {
+      span.style.fontFamily = 'var(--serif)';
+      span.style.fontSize = '22px';
+      span.style.fontWeight = '400';
+    }
+    el.style.display = 'none';
+    el.parentNode.insertBefore(span, el.nextSibling);
+    restorers.push(() => { el.style.display = ''; span.remove(); });
+  });
+
+  // Add a "filled" class to the body so print stylesheet can show personalization spots
+  document.body.classList.add('printing-filled');
+
+  // Render selected payment / portfolio rows visually for print (hide unselected)
+  const printHideSelectors = [];
+  // Hide unselected tier rows in Section 2.1 — keep only the selected one
+  document.querySelectorAll('.tier-row[data-tier]').forEach(row => {
+    if (row.dataset.tier !== state.tier && state.tier) row.classList.add('print-hide');
+  });
+  document.querySelectorAll('.tier-row[data-payment]').forEach(row => {
+    if (row.dataset.payment !== state.payment && state.payment) row.classList.add('print-hide');
+  });
+  document.querySelectorAll('.tier-row[data-portfolio]').forEach(row => {
+    if (row.dataset.portfolio !== state.portfolioDelay && state.portfolioDelay) row.classList.add('print-hide');
+  });
+
+  // Trigger print
+  setTimeout(() => {
+    window.print();
+
+    // Restore after the print dialog closes
+    const restore = () => {
+      restorers.forEach(fn => fn());
+      document.body.classList.remove('printing-filled');
+      document.querySelectorAll('.print-hide').forEach(el => el.classList.remove('print-hide'));
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+    // Fallback in case afterprint doesn't fire (some browsers)
+    setTimeout(restore, 2000);
+  }, 50);
 }
 
 /* ============================================================
@@ -2645,12 +2862,18 @@ function restore() {
     if (state.clientAddress) $('#clientAddress').value = state.clientAddress;
     if (state.clientEmail) $('#clientEmail').value = state.clientEmail;
     if (state.clientPhone) $('#clientPhone').value = state.clientPhone;
-    if (state.projectDescription) $('#projectDescription').value = state.projectDescription;
+    // Project brief mirrors into both Section 2.4 and Schedule B
+    if (state.projectBrief) {
+      $$('textarea[data-sync="projectBrief"]').forEach(ta => { ta.value = state.projectBrief; });
+    }
     if (state.projectName) $('#projectName').value = state.projectName;
-    if (state.projectBrief) $('#projectBrief').value = state.projectBrief;
     if (state.industry) $('#industry').value = state.industry;
     if (state.customVariations) $('#customVariations').value = state.customVariations;
     if (state.specialTerms) $('#specialTerms').value = state.specialTerms;
+    if (state.customSplitDetails) {
+      const cs = document.getElementById('customSplitDetails');
+      if (cs) cs.value = state.customSplitDetails;
+    }
   } catch (e) { /* ignore */ }
 }
 

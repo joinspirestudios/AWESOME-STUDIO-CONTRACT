@@ -23,9 +23,11 @@ const path = require('path');
 // Toggle: 'embedded' or 'email'
 const MODE = process.env.DROPBOX_SIGN_MODE || 'email';
 
-// API key — falls back to client-side key if env var not set (dev only)
-const API_KEY = process.env.DROPBOX_SIGN_API_KEY ||
-                '4de7afdc22788c66ca6604f466e51f846cafbfe66cbcddfacd72fbef92db0b29';
+// API key — should be set as a Vercel env var. The fallback below was previously
+// the same value as CLIENT_ID, which is incorrect (these are different in Dropbox Sign).
+// Leaving the fallback empty so missing env vars surface a clear error instead of
+// silently failing the API call.
+const API_KEY = process.env.DROPBOX_SIGN_API_KEY || '';
 
 const CLIENT_ID = process.env.DROPBOX_SIGN_CLIENT_ID ||
                   '4de7afdc22788c66ca6604f466e51f846cafbfe66cbcddfacd72fbef92db0b29';
@@ -87,6 +89,15 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Upfront validation — if no API key is set, return a clear error
+  if (!API_KEY) {
+    console.error('DROPBOX_SIGN_API_KEY env var not set on Vercel');
+    return res.status(500).json({
+      error: 'Server is missing DROPBOX_SIGN_API_KEY environment variable.',
+      hint: 'Set DROPBOX_SIGN_API_KEY in your Vercel project Settings → Environment Variables, then redeploy.'
+    });
+  }
+
   try {
     const body = req.body || {};
     const {
@@ -107,14 +118,31 @@ module.exports = async (req, res) => {
     }
 
     // Read the PDF from /pdf folder
-    const pdfPath = path.join(process.cwd(), 'pdf', 'AWESOME_Brand_Design_Agreement.pdf');
+    // On Vercel, serverless functions resolve relative paths from the function's own directory.
+    // We try multiple candidate paths so this works locally AND in production.
+    const candidates = [
+      path.join(process.cwd(), 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
+      path.join(__dirname, '..', 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
+      path.join('/var/task', 'pdf', 'AWESOME_Brand_Design_Agreement.pdf'),
+      path.join(__dirname, 'pdf', 'AWESOME_Brand_Design_Agreement.pdf')
+    ];
     let pdfBuffer;
-    try {
-      pdfBuffer = fs.readFileSync(pdfPath);
-    } catch (e) {
+    let pdfPath;
+    for (const candidate of candidates) {
+      try {
+        if (fs.existsSync(candidate)) {
+          pdfBuffer = fs.readFileSync(candidate);
+          pdfPath = candidate;
+          break;
+        }
+      } catch (e) { /* try next */ }
+    }
+    if (!pdfBuffer) {
+      console.error('Contract PDF not found. Tried paths:', candidates);
       return res.status(500).json({
-        error: 'Contract PDF not found on server. Make sure pdf/AWESOME_Brand_Design_Agreement.pdf is committed to the repository.',
-        path: pdfPath
+        error: 'Contract PDF not found on server.',
+        hint: 'Make sure pdf/AWESOME_Brand_Design_Agreement.pdf is committed and that vercel.json includes it via functions[].includeFiles.',
+        triedPaths: candidates
       });
     }
 

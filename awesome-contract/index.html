@@ -2912,7 +2912,7 @@ async function handleSign() {
   } catch (e) { console.warn('Submit log failed', e); }
 
   // Then create the Dropbox Sign signature request
-  let signUrl;
+  let data;
   try {
     const tier = TIER_CONFIG[state.tier];
     const payload = {
@@ -2949,9 +2949,7 @@ async function handleSign() {
       throw new Error(err.message || `Server returned ${res.status}`);
     }
 
-    const data = await res.json();
-    signUrl = data.signUrl;
-    if (!signUrl) throw new Error('No sign URL returned from server.');
+    data = await res.json();
   } catch (err) {
     console.error('Sign request error:', err);
     setStatus(
@@ -2963,27 +2961,61 @@ async function handleSign() {
     return;
   }
 
-  // Open the Dropbox Sign embedded modal
-  if (typeof HelloSign !== 'undefined') {
-    const client = new HelloSign({
-      clientId: DROPBOX_SIGN_CLIENT_ID,
-      skipDomainVerification: TEST_MODE
-    });
+  // === Branch on the mode the server returned ===
 
-    client.open(signUrl);
-
-    client.on('sign', () => {
-      setStatus('✓ Contract signed. Both parties will receive the completed PDF by email.', 'success');
-    });
-    client.on('cancel', () => {
-      setStatus('Signing cancelled. Click the button again when you\'re ready.', '');
-    });
-    client.on('error', (err) => {
-      setStatus('There was an issue with the signature widget. Please try again or contact hello@awesomebydesign.studio. (Error: ' + (err.code || 'unknown') + ')', 'error');
-    });
-  } else {
-    setStatus('The signing widget did not load. Please try again or contact hello@awesomebydesign.studio.', 'error');
+  if (data.mode === 'email') {
+    // Email mode: Dropbox Sign sent signing emails to both parties.
+    // No modal to open — just confirm to the user that emails are on the way.
+    setStatus(
+      '✓ Signing requests sent. Check your email — Dropbox Sign has emailed a signing link to ' +
+      state.clientEmail + ' and to hello@awesomebydesign.studio. ' +
+      'Once both parties sign, the completed contract will be emailed to both of you.',
+      'success'
+    );
+    // Optionally: lock the form / disable the button so the same submission isn't repeated
+    const btn = document.getElementById('signBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.classList.add('disabled');
+      btn.querySelector('span').textContent = 'Signing email sent ✓';
+    }
+    return;
   }
+
+  // Embedded mode: open the Dropbox Sign embedded modal in-page
+  if (data.mode === 'embedded') {
+    const signUrl = data.signUrl;
+    if (!signUrl) {
+      setStatus('Server returned embedded mode but no sign URL. Contact hello@awesomebydesign.studio.', 'error');
+      return;
+    }
+
+    if (typeof HelloSign !== 'undefined') {
+      const client = new HelloSign({
+        clientId: DROPBOX_SIGN_CLIENT_ID,
+        skipDomainVerification: TEST_MODE
+      });
+
+      client.open(signUrl);
+
+      client.on('sign', () => {
+        setStatus('✓ Contract signed. Both parties will receive the completed PDF by email.', 'success');
+      });
+      client.on('cancel', () => {
+        setStatus('Signing cancelled. Click the button again when you\'re ready.', '');
+      });
+      client.on('error', (err) => {
+        setStatus('There was an issue with the signature widget. Please try again or contact hello@awesomebydesign.studio. (Error: ' + (err.code || 'unknown') + ')', 'error');
+      });
+    } else {
+      setStatus('The signing widget did not load. Please try again or contact hello@awesomebydesign.studio.', 'error');
+    }
+    return;
+  }
+
+  // Unexpected response shape — fail gracefully
+  setStatus('Unexpected server response. Contact hello@awesomebydesign.studio.', 'error');
+  console.error('Unexpected /api/sign response:', data);
 }
 
 /* ============================================================

@@ -14,5 +14,8 @@
     "dev": "vercel dev",
     "deploy": "vercel --prod"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
 }

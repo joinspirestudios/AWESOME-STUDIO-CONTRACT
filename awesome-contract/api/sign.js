@@ -1,68 +1,144 @@
 // ============================================================
-// /api/sign.js — Dropbox Sign integration
+// /api/sign.js — BoldSign integration (v5)
 //
-// Creates a signature request via Dropbox Sign API.
+// Creates a signature request via the BoldSign API.
 //
-// v4 CHANGE: The document being signed is now generated dynamically
-// from the client's filled-in form state (via /lib/render-contract-pdf.js)
-// instead of being read from the static pdf/ folder. The static PDF
-// is kept as a logged fallback only — if it ever fires, that's a
-// [CRITICAL] error worth investigating.
+// Architecture (unchanged from v4):
+//   1. Render a personalized PDF from the client's filled-in form
+//      state via /lib/render-contract-pdf.js.
+//   2. If dynamic render fails, fall back to the static PDF in
+//      /pdf/ — and log [CRITICAL] so the failure gets noticed.
+//   3. Hand the resulting PDF to the e-signature provider for
+//      signing by both parties.
 //
-// Two modes supported:
-//   1. EMBEDDED MODE — opens signing modal in-page
-//      (requires Premium plan + Embedded App with client_id)
-//   2. EMAIL MODE — sends signing emails to both parties
-//      (works on any Dropbox Sign plan, simpler setup)
+// Mode: email — both signers receive signing emails directly from
+// BoldSign, and both receive the completed PDF (with a tamperproof
+// audit trail attached) when both have signed. Embedded signing is
+// reserved for v5.1; the frontend already has a placeholder branch
+// for it but the backend currently only returns mode='email'.
 //
-// Required environment variables (set in Vercel dashboard):
-//   DROPBOX_SIGN_API_KEY — your API key from Dropbox Sign
-//   DROPBOX_SIGN_CLIENT_ID — only needed for embedded mode
+// Sandbox vs Production toggle:
+//   Different API keys, same endpoint. Generate a Sandbox key for
+//   testing (free, watermarked, 14-day retention) and a Live key
+//   for production (Essentials plan, $30/mo, 40 docs/mo at time of
+//   writing). Swap the BOLDSIGN_API_KEY env var on Vercel; no code
+//   change required.
+//
+// Required environment variables (set in Vercel → Settings → Env Vars):
+//   BOLDSIGN_API_KEY       — required. API key from
+//                            app.boldsign.com → API → API Key.
+//   BOLDSIGN_API_BASE_URL  — optional, defaults to
+//                            https://api.boldsign.com. Override
+//                            only if BoldSign changes their URL.
 // ============================================================
 
 const fs = require('fs');
 const path = require('path');
 const { renderContractPDF } = require('../lib/render-contract-pdf');
 
-const MODE = process.env.DROPBOX_SIGN_MODE || 'email';
-const API_KEY = process.env.DROPBOX_SIGN_API_KEY || '';
-const CLIENT_ID = process.env.DROPBOX_SIGN_CLIENT_ID ||
-                  '4de7afdc22788c66ca6604f466e51f846cafbfe66cbcddfacd72fbef92db0b29';
-const TEST_MODE = process.env.DROPBOX_SIGN_TEST_MODE !== 'false';
-const HS_BASE = 'https://api.hellosign.com/v3';
+const API_KEY = process.env.BOLDSIGN_API_KEY || '';
+const API_BASE_URL = (process.env.BOLDSIGN_API_BASE_URL || 'https://api.boldsign.com')
+  .replace(/\/$/, '');
 
 // ============================================================
 // Helpers
 // ============================================================
 
-function basicAuth(apiKey) {
-  return 'Basic ' + Buffer.from(apiKey + ':').toString('base64');
+/**
+ * Count pages in a PDF buffer by counting `/Type /Page` dictionary
+ * entries (excluding `/Pages`, which is the parent container).
+ *
+ * Works on puppeteer-generated PDFs whose top-level structure is
+ * uncompressed. Returns 1 as a safe fallback if the regex doesn't
+ * match — in that case the signature lands on page 1, which is
+ * wrong visually but doesn't break the signing flow.
+ */
+function countPdfPages(buffer) {
+  try {
+    // PDFs are binary, but the structural tokens like `/Type /Page`
+    // are ASCII. latin1 round-trips arbitrary bytes safely.
+    const text = buffer.toString('latin1');
+    // Match `/Type /Page` followed by a non-letter char to exclude
+    // the `/Pages` parent. Whitespace and `/` are valid PDF token
+    // separators after a name.
+    const matches = text.match(/\/Type\s*\/Page[^s]/g);
+    return matches && matches.length > 0 ? matches.length : 1;
+  } catch (e) {
+    return 1;
+  }
 }
 
-function escapeFormVal(val) {
-  return String(val == null ? '' : val);
-}
+/**
+ * Build the BoldSign signers array with signature + date-signed
+ * fields placed on the last page of the document.
+ *
+ * Layout: designer (Kehinde) bottom-left, client bottom-right.
+ *
+ * Coordinates are in PDF points (1/72 inch) on an A4 page
+ * (595 × 842). BoldSign uses top-left origin: Y increases downward.
+ *
+ * NOTE: If the first sandbox render shows fields in the wrong
+ * place, the fix is to tweak these constants — not to refactor.
+ */
+function buildSigners({
+  designerEmail, designerName,
+  clientEmail, clientName,
+  lastPage
+}) {
+  const sigY = 720;     // ~120pt up from bottom of A4 (842 - 720 = 122)
+  const sigW = 200;
+  const sigH = 40;
+  const dateH = 18;
 
-function buildMultipart(fields, files, boundary) {
-  const chunks = [];
-  const CRLF = '\r\n';
+  const designerX = 60;
+  const clientX = 335;
 
-  for (const [key, value] of Object.entries(fields)) {
-    chunks.push(Buffer.from(`--${boundary}${CRLF}`));
-    chunks.push(Buffer.from(`Content-Disposition: form-data; name="${key}"${CRLF}${CRLF}`));
-    chunks.push(Buffer.from(escapeFormVal(value) + CRLF));
-  }
-
-  for (const file of files) {
-    chunks.push(Buffer.from(`--${boundary}${CRLF}`));
-    chunks.push(Buffer.from(`Content-Disposition: form-data; name="${file.field}"; filename="${file.filename}"${CRLF}`));
-    chunks.push(Buffer.from(`Content-Type: ${file.contentType}${CRLF}${CRLF}`));
-    chunks.push(file.data);
-    chunks.push(Buffer.from(CRLF));
-  }
-
-  chunks.push(Buffer.from(`--${boundary}--${CRLF}`));
-  return Buffer.concat(chunks);
+  return [
+    {
+      Name: designerName,
+      EmailAddress: designerEmail,
+      SignerType: 'Signer',
+      SignerOrder: 1,
+      FormFields: [
+        {
+          Id: 'designer_signature',
+          FieldType: 'Signature',
+          PageNumber: lastPage,
+          Bounds: { X: designerX, Y: sigY, Width: sigW, Height: sigH },
+          IsRequired: true
+        },
+        {
+          Id: 'designer_date',
+          FieldType: 'DateSigned',
+          PageNumber: lastPage,
+          Bounds: { X: designerX, Y: sigY + sigH + 4, Width: sigW, Height: dateH },
+          IsRequired: true
+        }
+      ]
+    },
+    {
+      Name: clientName,
+      EmailAddress: clientEmail,
+      SignerType: 'Signer',
+      SignerOrder: 2,
+      FormFields: [
+        {
+          Id: 'client_signature',
+          FieldType: 'Signature',
+          PageNumber: lastPage,
+          Bounds: { X: clientX, Y: sigY, Width: sigW, Height: sigH },
+          IsRequired: true
+        },
+        {
+          Id: 'client_date',
+          FieldType: 'DateSigned',
+          PageNumber: lastPage,
+          Bounds: { X: clientX, Y: sigY + sigH + 4, Width: sigW, Height: dateH },
+          IsRequired: true
+        }
+      ]
+    }
+  ];
 }
 
 // ============================================================
@@ -104,7 +180,7 @@ async function resolvePdfBuffer(formData) {
       if (fs.existsSync(candidate)) {
         const buf = fs.readFileSync(candidate);
         console.error(
-          '[CRITICAL] Sending STATIC fallback PDF to Dropbox Sign — ' +
+          '[CRITICAL] Sending STATIC fallback PDF to BoldSign — ' +
           'client will not see their filled-in data in the signed contract.'
         );
         return { buffer: buf, source: 'static-fallback', path: candidate };
@@ -136,10 +212,11 @@ module.exports = async (req, res) => {
   }
 
   if (!API_KEY) {
-    console.error('DROPBOX_SIGN_API_KEY env var not set on Vercel');
+    console.error('BOLDSIGN_API_KEY env var not set on Vercel');
     return res.status(500).json({
-      error: 'Server is missing DROPBOX_SIGN_API_KEY environment variable.',
-      hint: 'Set DROPBOX_SIGN_API_KEY in your Vercel project Settings → Environment Variables, then redeploy.'
+      error: 'Server is missing BOLDSIGN_API_KEY environment variable.',
+      hint: 'Set BOLDSIGN_API_KEY in Vercel → Settings → Environment Variables, then redeploy. ' +
+            'Use a Sandbox key during testing, a Live key in production. Same env var name, different value.'
     });
   }
 
@@ -178,104 +255,107 @@ module.exports = async (req, res) => {
       });
     }
 
-    const boundary = '----awesome' + Math.random().toString(36).substring(2);
-    const endpoint = MODE === 'embedded' ? '/signature_request/create_embedded' : '/signature_request/send';
-
-    const fields = {
-      'title': title,
-      'subject': subject,
-      'message': message,
-      'test_mode': TEST_MODE ? '1' : '0',
-
-      'signers[0][email_address]': designerEmail,
-      'signers[0][name]': designerName,
-      'signers[0][order]': '0',
-
-      'signers[1][email_address]': clientEmail,
-      'signers[1][name]': clientName,
-      'signers[1][order]': '1',
-
-      'metadata[client_email]': clientEmail,
-      'metadata[tier]': formData.tier || '',
-      'metadata[country]': formData.country || '',
-      'metadata[start_date]': formData.startDate || '',
-      'metadata[project_name]': formData.projectName || '',
-      'metadata[pdf_source]': pdfSource
-    };
-
-    if (MODE === 'embedded') {
-      fields['client_id'] = CLIENT_ID;
-    }
-
-    const multipartBody = buildMultipart(
-      fields,
-      [{
-        field: 'file[0]',
-        filename: 'AWESOME_Brand_Design_Agreement.pdf',
-        contentType: 'application/pdf',
-        data: pdfBuffer
-      }],
-      boundary
+    // Determine which page to place signatures on
+    const pageCount = countPdfPages(pdfBuffer);
+    console.log(
+      `[sign] PDF has ${pageCount} pages — signature fields will be placed on page ${pageCount}.`
     );
 
-    const dsRes = await fetch(HS_BASE + endpoint, {
-      method: 'POST',
-      headers: {
-        'Authorization': basicAuth(API_KEY),
-        'Content-Type': `multipart/form-data; boundary=${boundary}`,
-        'Content-Length': multipartBody.length.toString()
-      },
-      body: multipartBody
+    // Build the BoldSign request
+    const signers = buildSigners({
+      designerEmail, designerName,
+      clientEmail, clientName,
+      lastPage: pageCount
     });
 
-    const dsData = await dsRes.json();
+    const base64Pdf = pdfBuffer.toString('base64');
 
-    if (!dsRes.ok) {
-      console.error('Dropbox Sign API error:', dsData);
+    // BoldSign caps each metadata value at 500 chars; truncate defensively.
+    const trimMeta = (v) => String(v == null ? '' : v).slice(0, 500);
+
+    const payload = {
+      Title: title,
+      Subject: subject,
+      Message: message,
+      Signers: signers,
+      // Parallel signing (matches v4 behavior). Set to true if you ever
+      // want sequential signing where Kehinde must sign before the
+      // client gets their email.
+      EnableSigningOrder: false,
+      ExpiryDays: 30,
+      DisableExpiryAlert: false,
+      Files: [
+        // BoldSign accepts a base64 data URI in the Files array.
+        `data:application/pdf;base64,${base64Pdf}`
+      ],
+      MetaData: {
+        client_email: trimMeta(clientEmail),
+        tier: trimMeta(formData.tier),
+        country: trimMeta(formData.country),
+        start_date: trimMeta(formData.startDate),
+        project_name: trimMeta(formData.projectName),
+        pdf_source: trimMeta(pdfSource)
+      }
+    };
+
+    let bsRes;
+    try {
+      bsRes = await fetch(`${API_BASE_URL}/v1/document/send`, {
+        method: 'POST',
+        headers: {
+          'X-API-KEY': API_KEY,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch (netErr) {
+      console.error('[sign] Network error reaching BoldSign:', netErr);
       return res.status(502).json({
-        error: 'Dropbox Sign API rejected the request',
-        details: dsData.error || dsData,
-        hint: dsData.error?.error_msg ||
-              'Verify DROPBOX_SIGN_API_KEY is correct and has signing permissions.'
+        error: 'Network error reaching BoldSign API',
+        message: netErr.message,
+        hint: 'Check Vercel function logs and BoldSign status (status.boldsign.com).'
       });
     }
 
-    const sigRequest = dsData.signature_request;
+    let bsData = null;
+    try { bsData = await bsRes.json(); } catch (e) { /* may not be JSON on some errors */ }
 
-    if (MODE === 'embedded') {
-      const clientSig = sigRequest.signatures.find(s => s.signer_email_address === clientEmail);
-      if (!clientSig) {
-        return res.status(500).json({ error: 'Could not locate client signature record.' });
-      }
-
-      const urlRes = await fetch(`${HS_BASE}/embedded/sign_url/${clientSig.signature_id}`, {
-        method: 'GET',
-        headers: { 'Authorization': basicAuth(API_KEY) }
-      });
-      const urlData = await urlRes.json();
-
-      if (!urlRes.ok) {
-        return res.status(502).json({
-          error: 'Could not retrieve embedded sign URL',
-          details: urlData.error || urlData
-        });
-      }
-
-      return res.status(200).json({
-        mode: 'embedded',
-        signUrl: urlData.embedded.sign_url,
-        signatureRequestId: sigRequest.signature_request_id,
-        pdfSource: pdfSource
-      });
-    } else {
-      return res.status(200).json({
-        mode: 'email',
-        emailsSent: true,
-        signatureRequestId: sigRequest.signature_request_id,
-        pdfSource: pdfSource,
-        message: `Signature request emails sent to ${designerEmail} and ${clientEmail}.`
+    if (!bsRes.ok) {
+      console.error('BoldSign API error:', bsRes.status, bsData);
+      return res.status(502).json({
+        error: 'BoldSign API rejected the request',
+        status: bsRes.status,
+        details: bsData,
+        hint: (bsData && (bsData.error || bsData.title || bsData.message)) ||
+              'Verify BOLDSIGN_API_KEY is correct and has document-send scope. ' +
+              'Note: a Sandbox key cannot send from a Live account, and vice versa.'
       });
     }
+
+    const documentId = bsData && bsData.documentId;
+    if (!documentId) {
+      console.error('BoldSign returned 2xx without a documentId:', bsData);
+      return res.status(502).json({
+        error: 'BoldSign accepted the request but returned no documentId.',
+        details: bsData
+      });
+    }
+
+    console.log(
+      `[sign] BoldSign document created: ${documentId} ` +
+      `(client="${clientName}" pdfSource="${pdfSource}")`
+    );
+
+    // Response shape matches what the frontend handleSign() expects.
+    // Frontend keeps the email/embedded branch structure for v5.1.
+    return res.status(200).json({
+      mode: 'email',
+      emailsSent: true,
+      documentId: documentId,
+      pdfSource: pdfSource,
+      message: `Signature request emails sent to ${designerEmail} and ${clientEmail}.`
+    });
   } catch (err) {
     console.error('Sign handler error:', err);
     return res.status(500).json({

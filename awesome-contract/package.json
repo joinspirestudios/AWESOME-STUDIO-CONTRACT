@@ -8,14 +8,12 @@
   },
   "dependencies": {
     "@sparticuz/chromium-min": "^140.0.0",
-    "puppeteer-core": "^24.0.0"
+    "puppeteer-core": "^24.0.0",
+    "@vercel/analytics": "^2.0.1"
   },
   "scripts": {
     "dev": "vercel dev",
     "deploy": "vercel --prod"
   },
-  "license": "UNLICENSED",
-  "dependencies": {
-    "@vercel/analytics": "^2.0.1"
-  }
+  "license": "UNLICENSED"
 }

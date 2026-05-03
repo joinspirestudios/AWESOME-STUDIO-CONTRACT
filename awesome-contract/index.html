@@ -7,9 +7,6 @@
 <meta name="description" content="THE AWESOME DESIGN STUDIO LTD — Brand Design Agreement">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
-<!-- Hellosign / Dropbox Sign Embedded SDK -->
-<script src="https://cdn.hellosign.com/public/js/embedded/v2.10.1/embedded.production.min.js"></script>
-
 <!-- Vercel Web Analytics -->
 <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -2032,7 +2029,7 @@ body {
         <p>This contract &mdash; together with Schedule A and Schedule B &mdash; is the complete and final agreement between the Parties regarding the project. It replaces all earlier discussions, proposals, emails, WhatsApp messages, voice notes, and verbal agreements.</p>
 
         <h2>17.2 &nbsp; Amendments</h2>
-        <p>Any change to this contract must be made in writing, signed by both Parties (electronically through Dropbox Sign or by physical signature), and attached to this contract as an addendum. Verbal changes have no effect.</p>
+        <p>Any change to this contract must be made in writing, signed by both Parties (electronically or by physical signature), and attached to this contract as an addendum. Verbal changes have no effect.</p>
 
         <h2>17.3 &nbsp; Severability</h2>
         <p>If any clause of this contract is held to be invalid or unenforceable by a court or arbitrator, the rest of the contract continues in full force. The invalid clause will be replaced by a valid clause that comes as close as possible to the original intent.</p>
@@ -2050,7 +2047,7 @@ body {
         <p>All formal notices under this contract &mdash; including termination notices, breach notices, and dispute notices &mdash; must be sent by email to the addresses listed in Section 1, with a copy by WhatsApp to the number listed in Section 11.1.</p>
 
         <h2>17.8 &nbsp; Counterparts and Electronic Signature</h2>
-        <p>This contract may be signed in counterparts, including electronically through Dropbox Sign. Electronic signatures and counterpart signatures have the same legal force as physical wet-ink signatures, in accordance with the Nigerian Evidence Act (2011) and the Electronic Transactions Act.</p>
+        <p>This contract may be signed in counterparts, including by electronic signature. Electronic signatures and counterpart signatures have the same legal force as physical wet-ink signatures, in accordance with the Nigerian Evidence Act (2011) and the Electronic Transactions Act.</p>
       </section>
 
       <!-- ============= SCHEDULE A ============= -->
@@ -2164,7 +2161,7 @@ body {
           <div class="sign-eyebrow">Section 18 &nbsp;·&nbsp; Acceptance</div>
           <div class="sign-prepared-for" id="signPreparedFor" style="display:none;">Prepared for <strong data-bind="clientNameRef"></strong></div>
           <h2 class="sign-headline">Sign &amp; Build<br>Something <span class="light">Awesome</span></h2>
-          <p class="sign-confirmation">By signing this contract through Dropbox Sign, both Parties confirm they have read this contract in full, understand its terms, and have the authority to enter into this agreement on behalf of the Party they represent.</p>
+          <p class="sign-confirmation">By signing this contract electronically, both Parties confirm they have read this contract in full, understand its terms, and have the authority to enter into this agreement on behalf of the Party they represent.</p>
 
           <!-- Live summary of selected options -->
           <div class="sign-summary" id="signSummary">
@@ -2194,7 +2191,7 @@ body {
           <div class="sign-cta-block">
             <button type="button" class="sign-cta disabled" id="signBtn" disabled>
               <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 4l5 5 5-5v2L8 11 3 6V4z"/></svg>
-              <span>Sign with Dropbox Sign</span>
+              <span>Sign Contract</span>
             </button>
             <a href="#" class="sign-secondary" id="downloadBtn">Download PDF</a>
           </div>
@@ -2225,23 +2222,17 @@ body {
 </footer>
 
 <!-- ============================================================
-     SCRIPT — reactive contract logic + Dropbox Sign integration
+     SCRIPT — reactive contract logic + e-signature integration
      ============================================================ -->
 <script>
 /* ============================================================
    CONFIGURATION
-   API key for Dropbox Sign embedded signing.
 
-   ⚠️  PRODUCTION SECURITY NOTE:
-   This key is exposed in client-side code. For production, the actual
-   API key (used to CREATE signature requests) should live in a Vercel
-   environment variable named DROPBOX_SIGN_API_KEY and only be
-   accessed from /api/sign.js (server-side). The CLIENT_ID below is
-   safe to expose — it's a public identifier used by the embedded SDK.
+   The e-signature integration is fully server-side. The API key
+   lives in a Vercel environment variable (BOLDSIGN_API_KEY) and
+   is accessed only from /api/sign.js. There are no client-side
+   keys or SDKs needed for the email-mode signing flow.
    ============================================================ */
-
-const DROPBOX_SIGN_CLIENT_ID = '4de7afdc22788c66ca6604f466e51f846cafbfe66cbcddfacd72fbef92db0b29';
-const TEST_MODE = true; // set to false in production (live mode signature requests)
 
 /* ============================================================
    STATE
@@ -2866,7 +2857,7 @@ function freezeInputsForPrint() {
    DOWNLOAD PDF — dynamic server-rendered version (preferred)
    POSTs current state to /api/generate-pdf, gets a PDF buffer
    back, triggers a browser download. The PDF is byte-identical
-   to what gets sent to Dropbox Sign for signing.
+   to what gets sent to the e-signature provider for signing.
    ============================================================ */
 
 async function downloadFilledPDF() {
@@ -2916,7 +2907,7 @@ async function downloadFilledPDF() {
     console.error('Download via server failed, falling back to browser print:', err);
     // Fallback: browser-side window.print() with frozen inputs.
     // This still produces a personalized PDF but takes a different rendering path,
-    // so it may differ slightly in styling from the Dropbox Sign version.
+    // so it may differ slightly in styling from the server-rendered version.
     downloadFilledPDFViaPrint();
   } finally {
     clearTimeout(hintTimer);
@@ -2994,15 +2985,22 @@ function restore() {
 }
 
 /* ============================================================
-   DROPBOX SIGN INTEGRATION
+   E-SIGNATURE INTEGRATION (BoldSign, email mode)
 
    Flow:
-   1. Client fills in form + clicks "Sign with Dropbox Sign"
-   2. POST to /api/sign with form data
-   3. Server uses Dropbox Sign API key (env var) to create
-      an embedded signature request, returns sign_url
-   4. Client opens HelloSign embedded modal with sign_url
-   5. Client signs in modal — Dropbox Sign emails both parties
+   1. Client fills in form + clicks "Sign Contract"
+   2. POST /api/submit  — log the submission for tracking
+   3. POST /api/sign    — server renders a personalized PDF and
+                          creates a BoldSign signature request
+   4. Server returns { mode: 'email', documentId, ... }
+   5. BoldSign emails signing links to both parties; once both
+      have signed, both receive the completed PDF (with audit
+      trail attached) automatically from BoldSign.
+
+   The email/embedded branching below is preserved intentionally.
+   v5 only ships the email branch. v5.1 will wire up BoldSign's
+   embedded signing (a different SDK from the old HelloSign one),
+   and the structural shape will already be in place when it does.
    ============================================================ */
 
 const setStatus = (msg, type = '') => {
@@ -3040,7 +3038,7 @@ async function handleSign() {
     });
   } catch (e) { console.warn('Submit log failed', e); }
 
-  // Then create the Dropbox Sign signature request
+  // Then create the e-signature request
   let data;
   try {
     const tier = TIER_CONFIG[state.tier];
@@ -3060,11 +3058,7 @@ async function handleSign() {
 
       // Form data captured before signing
       formData: { ...state },
-      tierConfig: tier,
-
-      // Embedded mode flag
-      testMode: TEST_MODE,
-      clientId: DROPBOX_SIGN_CLIENT_ID
+      tierConfig: tier
     };
 
     const res = await fetch('/api/sign', {
@@ -3078,7 +3072,7 @@ async function handleSign() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `Server returned ${res.status}`);
+      throw new Error(err.message || err.hint || err.error || `Server returned ${res.status}`);
     }
 
     data = await res.json();
@@ -3087,7 +3081,7 @@ async function handleSign() {
     console.error('Sign request error:', err);
     setStatus(
       'Could not create signature request. ' +
-      'Make sure the /api/sign endpoint is deployed and the DROPBOX_SIGN_API_KEY environment variable is set on Vercel. ' +
+      'Make sure the /api/sign endpoint is deployed and the BOLDSIGN_API_KEY environment variable is set on Vercel. ' +
       '(Error: ' + err.message + ')',
       'error'
     );
@@ -3097,15 +3091,15 @@ async function handleSign() {
   // === Branch on the mode the server returned ===
 
   if (data.mode === 'email') {
-    // Email mode: Dropbox Sign sent signing emails to both parties.
+    // Email mode: BoldSign sent signing emails to both parties.
     // No modal to open — just confirm to the user that emails are on the way.
     setStatus(
-      '✓ Signing requests sent. Check your email — Dropbox Sign has emailed a signing link to ' +
+      '✓ Signing requests sent. Check your email — a signing link has been sent to ' +
       state.clientEmail + ' and to hello@awesomebydesign.studio. ' +
       'Once both parties sign, the completed contract will be emailed to both of you.',
       'success'
     );
-    // Optionally: lock the form / disable the button so the same submission isn't repeated
+    // Lock the button so the same submission isn't repeated
     const btn = document.getElementById('signBtn');
     if (btn) {
       btn.disabled = true;
@@ -3115,34 +3109,26 @@ async function handleSign() {
     return;
   }
 
-  // Embedded mode: open the Dropbox Sign embedded modal in-page
+  // Embedded mode: reserved for v5.1.
+  //
+  // The server currently never returns mode='embedded'; this branch
+  // exists so the v5.1 wire-up only needs to fill in the SDK call
+  // without restructuring handleSign. If somehow this code path is
+  // hit today (server misconfiguration), surface a clear message
+  // instead of silently failing.
   if (data.mode === 'embedded') {
-    const signUrl = data.signUrl;
-    if (!signUrl) {
-      setStatus('Server returned embedded mode but no sign URL. Contact hello@awesomebydesign.studio.', 'error');
-      return;
-    }
-
-    if (typeof HelloSign !== 'undefined') {
-      const client = new HelloSign({
-        clientId: DROPBOX_SIGN_CLIENT_ID,
-        skipDomainVerification: TEST_MODE
-      });
-
-      client.open(signUrl);
-
-      client.on('sign', () => {
-        setStatus('✓ Contract signed. Both parties will receive the completed PDF by email.', 'success');
-      });
-      client.on('cancel', () => {
-        setStatus('Signing cancelled. Click the button again when you\'re ready.', '');
-      });
-      client.on('error', (err) => {
-        setStatus('There was an issue with the signature widget. Please try again or contact hello@awesomebydesign.studio. (Error: ' + (err.code || 'unknown') + ')', 'error');
-      });
-    } else {
-      setStatus('The signing widget did not load. Please try again or contact hello@awesomebydesign.studio.', 'error');
-    }
+    console.warn(
+      '/api/sign returned mode="embedded" but the embedded signing ' +
+      'integration is not yet wired up in v5. Falling back to a clear ' +
+      'error so we don\'t silently strand the client. ' +
+      'Server response:',
+      data
+    );
+    setStatus(
+      'Embedded signing isn\'t available yet — please contact hello@awesomebydesign.studio ' +
+      'and we\'ll send you a signing link by email.',
+      'error'
+    );
     return;
   }
 

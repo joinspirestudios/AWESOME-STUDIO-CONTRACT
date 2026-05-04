@@ -268,7 +268,7 @@ module.exports = async (req, res) => {
       lastPage: pageCount
     });
 
-    const base64Pdf = `data:application/pdf;base64,${pdfBuffer.toString('base64')}`;
+    const base64Pdf = pdfBuffer.toString('base64');
 
     // BoldSign caps each metadata value at 500 chars; truncate defensively.
     const trimMeta = (v) => String(v == null ? '' : v).slice(0, 500);

@@ -268,3 +268,22 @@ PDF_RENDER_BASE_URL=http://localhost:3000
 ---
 
 *Built to be Awesome. 2026 ©*
+
+
+### BoldSign 422 — invalid base64 string
+
+If BoldSign returns:
+
+```txt
+The value for the file is not a valid base64 string.
+```
+
+the PDF payload is likely being sent as raw base64 instead of a full data URI.
+
+BoldSign expects this exact format inside the `Files` array:
+
+```txt
+data:application/pdf;base64,<content>
+```
+
+Do not send the raw base64 string by itself.

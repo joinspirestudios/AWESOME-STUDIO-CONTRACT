@@ -268,7 +268,16 @@ module.exports = async (req, res) => {
       lastPage: pageCount
     });
 
-    const base64Pdf = pdfBuffer.toString('base64');
+    // CRITICAL: page.pdf() in puppeteer-core v22+ returns a Uint8Array, NOT
+    // a Node Buffer. Calling .toString('base64') directly on a Uint8Array
+    // returns a comma-separated list of byte values (e.g. "37,80,68,70,...")
+    // which is NOT valid base64 and will cause BoldSign to reject the request
+    // with: "The value for the file is not a valid base64 string."
+    //
+    // Buffer.from() accepts both Buffers (no-op) and Uint8Arrays (proper
+    // conversion), so this is safe regardless of what the renderer returns.
+    // DO NOT remove the Buffer.from() wrapper.
+    const base64Pdf = Buffer.from(pdfBuffer).toString('base64');
 
     // BoldSign caps each metadata value at 500 chars; truncate defensively.
     const trimMeta = (v) => String(v == null ? '' : v).slice(0, 500);
